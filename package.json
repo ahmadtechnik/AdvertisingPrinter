@@ -1,0 +1,27 @@
+{
+  "name": "advertisingprinter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "jquery": "npm install --prefix ./views/assets/ jquery",
+    "semanticui": "npm install --prefix ./views/assets/ semantic-ui",
+    "jqueryUI": "npm install --prefix ./views/assets/ jquery-ui-dist",
+    "editor"  : "npm install --prefix ./views/assets/ quill"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmadkoudier/AdvertisingPrinter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahmadkoudier/AdvertisingPrinter/issues"
+  },
+  "homepage": "https://github.com/ahmadkoudier/AdvertisingPrinter#readme",
+  "dependencies": {
+    "electron": "^5.0.5"
+  }
+}
