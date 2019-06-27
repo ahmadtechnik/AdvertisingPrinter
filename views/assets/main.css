@@ -1,0 +1,9 @@
+.ui.form{
+    padding: 20px;
+}
+
+.enterDataFinished{
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+}

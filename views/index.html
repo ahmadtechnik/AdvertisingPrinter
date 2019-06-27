@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <script>
+        var jQuery = require("jquery")
+        var $ = require("jquery");
+    
+    </script>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,81 +17,110 @@
     <!-- import semantic ui lib -->
     <script src="./assets/node_modules/semantic-ui/dist/semantic.js"></script>
     <link rel="stylesheet" href="./assets/node_modules/semantic-ui/dist/semantic.css">
-
     <!-- import text editor -->
     <script src="./assets/node_modules/quill/dist/quill.js"></script>
-
-    <link rel="stylesheet" href="assets/node_modules/quill/dist/quill.core.css">
     <link rel="stylesheet" href="assets/node_modules/quill/dist/quill.snow.css">
+    <!-- import jquery ui -->
+    <script src="./assets/node_modules/jquery-ui-dist/jquery-ui.js"></script>
+    <link rel="stylesheet" href="assets/node_modules/jquery-ui-dist/jquery-ui.css">
+    <!-- import main stylesheet file -->
+    <link rel="stylesheet" href="assets/main.css">
 
+    <!-- import image editor -->
+    <link rel="stylesheet" href="./assets/node_modules/cropperjs/dist/cropper.css">
+    <script src="./assets/node_modules/cropperjs/dist/cropper.js"></script>
 </head>
 
 <body>
-    <div class="ui vertically divided grid">
+    <div class="ui vertically divided grid ">
+        <!--  -->
         <div class="one column row">
             <div class="column">
-                <div class="ui segment inverted">
+                <div class="ui segment inverted ">
                     <div class="ui header">Wilcomme to Advertising Printer Program.</div>
                 </div>
             </div>
         </div>
-
+        <!--  -->
         <div class="one column row">
             <div class="column">
-                <div class="ui segment">
-                    <div class="ui form padded">
-                        <div class="ui three fields ">
-                            <div class="field">
-                                <label for="">Product Title</label>
-                                <input type="text" name="" id="">
+                <div class="ui form">
+                    <div class="three fields">
+                        <div class="field">
+                            <label for="">Product Title</label>
+                            <input type="text" name="" id="productTitleField">
+                        </div>
+                        <div class="field">
+                            <label for="">Product New Price</label>
+                            <div class="ui right labeled input">
+                                <label for="amount" class="ui label">€</label>
+                                <input type="text" placeholder="New Price" id="productNewPriceField">
+                                <div class="ui basic label">.99</div>
                             </div>
-                            <div class="field">
-                                <label for="">Product New Price</label>
-                                <div class="ui right labeled input">
-                                    <label for="amount" class="ui label">€</label>
-                                    <input type="text" placeholder="Amount" id="amount">
-                                    <div class="ui basic label">.00</div>
-                                </div>
+                        </div>
+                        <div class="field">
+                            <label for="">Product Old Price</label>
+                            <div class="ui right labeled input">
+                                <label for="amount" class="ui label">€</label>
+                                <input type="text" placeholder="Old Price" id="productOldPriceField">
+                                <div class="ui basic label">.99</div>
                             </div>
-                            <div class="field">
-                                <label for="">Product Old Price</label>
-                                <div class="ui right labeled input">
-                                    <label for="amount" class="ui label">€</label>
-                                    <input type="text" placeholder="Amount" id="amount">
-                                    <div class="ui basic label">.00</div>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="field">
+                            <label for="">Product manufacturer</label>
+                            <input type="text" id="productManufacturerField">
+                        </div>
+                        <div class="field">
+                            <label for="">Note</label>
+                            <input type="text" id="productNoteField">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!--  -->
         <div class="one column row">
+            <div class="column" id="textEditorContainer">
+                <div id="editor"></div>
+            </div>
+        </div>
+        <!--  -->
+        <div class="one column row stackable">
             <div class="column">
-                <!-- Create the toolbar container -->
-                <div id="toolbar">
-                    <!-- Add font size dropdown -->
-                    <select class="ql-size">
-                        <option value="small"></option>
-                        <!-- Note a missing, thus falsy value, is used to reset to default -->
-                        <option selected></option>
-                        <option value="large"></option>
-                        <option value="huge"></option>
-                    </select>
-                    <!-- Add a bold button -->
-                    <button class="ql-bold"></button>
-                    <!-- Add subscript and superscript buttons -->
-                    <button class="ql-script" value="sub"></button>
-                    <button class="ql-script" value="super"></button>
-                </div>
-
-                <!-- Create the editor container -->
-                <div id="editor">
-                    <p>Hello World!</p>
+                <div class="ui form">
+                    <div class=" three equal fields">
+                        <div class="field">
+                            <select class="ui dropdown selection " id="pageBackgroundColorDropdown">
+                            </select>
+                        </div>
+                        <div class="field">
+                            <div class="ui fluid  selection dropdown" id="pageSizeDropdown">
+                                <input type="hidden">
+                                <div class="default text">Page Size</div>
+                                <i class="dropdown icon"></i>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <input type="file" style="display: none;" id="uploadedFileButton">
+                            <div class="ui button blue" id="uploadFileFakeButton">Upload PNG Image</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="ui modal" id="imageEditor">
+        <div class="ui header">
+            Image Editor
+        </div>
+        <div class="scrolling content"></div>
+        <div class="actions">
+            <div class="ui button green ok">Finished</div>
+        </div>
+    </div>
+    <div class="ui button green enterDataFinished" id="printBtnAction">Print</div>
 </body>
 <!-- import main script -->
 <script src="./assets/main.js"></script>
