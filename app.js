@@ -14,7 +14,8 @@ app.on("ready", () => {
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: 'app.js'
         }
     });
 
@@ -50,7 +51,7 @@ ipcMain.on("chan", (event, args) => {
     printWindow.webContents.on("did-finish-load" , () => {
         printWindow.webContents.send("dataToPrint", storedData);
         //
-        printWindow.webContents.print();
+       // printWindow.webContents.print();
     });
 
     /** to clear RAM after window closed */

@@ -9,7 +9,7 @@
     "semanticui": "npm install --prefix ./views/assets/ semantic-ui",
     "jqueryUI": "npm install --prefix ./views/assets/ jquery-ui-dist",
     "editor": "npm install --prefix ./views/assets/ quill",
-    "cropperjs" : "npm install --prefix ./views/assets/ cropperjs"
+    "cropperjs": "npm install --prefix ./views/assets/ cropperjs"
   },
   "repository": {
     "type": "git",
