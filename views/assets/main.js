@@ -72,6 +72,7 @@ var onPrintBtnAction = (event) => {
                         /** to convert the uploaded image to base64 */
                         getBase64(_UPLOADED_FILE, (result) => {
 
+
                             _ALL_DATA_STORED = {
                                 productTitleField: productTitleField.val(),
                                 productNewPriceField: productNewPriceField.val(),
@@ -132,20 +133,27 @@ var onPrintBtnAction = (event) => {
             html: "<span style='color:red;'>This filed is empty</span>",
         }).popup("show");
     }
-
 }
 
 // on upload btn change
 var onUploadBtnChnge = (event) => {
     var file = event.target.files;
     var uploadFileFakeButton = $(`#uploadFileFakeButton`);
+
     if (file.length > 0) {
-        _UPLOADED_FILE = file[0];
-        uploadFileFakeButton.switchClass("blue", "green");
+        if (file[0].type === "image/png") {
+            _UPLOADED_FILE = file[0];
+            uploadFileFakeButton.switchClass("blue", "green");
+        }else{
+            _UPLOADED_FILE = null;
+            uploadFileFakeButton.switchClass("green", "blue"); 
+        }
     } else {
         _UPLOADED_FILE = null;
         uploadFileFakeButton.switchClass("green", "blue");
     }
+
+
 }
 /**
  * Text editor toolbar options
@@ -235,10 +243,14 @@ var colorsArray = ["red", "orange", "yellow", "pink",
 ];
 /** assign all color values to select menu */
 $.each(colorsArray, (index, element) => {
-
+    var div = document.createElement("div");
+    div.setAttribute("class", "ui label " + element);
+    div.setAttribute("id", "color_" + element);
+    document.body.appendChild(div);
+    var selectedColor = $(div).css("background-color");
     backgroundColorsValues.push({
-        name: `<a class="ui label mini ${element}">${element}</a>`,
-        value: `${element}`
+        name: `<a class="ui label mini ${element}">${selectedColor}</a>`,
+        value: `${selectedColor}`
     });
 })
 
@@ -266,7 +278,14 @@ var imageEditorModalOptions = {
     },
     onApprove: () => {
         if (_IMAGE_EDITOR_ !== null) {
-            var croppedCanvas = _IMAGE_EDITOR_.getCroppedCanvas();
+            var croppedCanvas = _IMAGE_EDITOR_.getCroppedCanvas({
+                width: 480,
+                height: 720,
+            });
+            var gettedContext = croppedCanvas.getContext("2d");
+
+            cropImageFromCanvas(gettedContext, croppedCanvas);
+
             _ALL_DATA_STORED._UPLOADED_FILE = croppedCanvas.toDataURL();
         }
         electron.ipcRenderer.send("chan", {
@@ -277,8 +296,8 @@ var imageEditorModalOptions = {
     onVisible: () => {
         _IMAGE_EDITOR_ = new Cropper(_IMAGE_TO_CORP, {
             viewMode: 1,
-            autoCrop: false,
         });
+        _IMAGE_EDITOR_.setAspectRatio(2 / 3)
     }
 }
 /** extentions */
@@ -295,4 +314,46 @@ function getBase64(file, afterFinish) {
     reader.onerror = function (error) {
         console.log('Error: ', error);
     };
+}
+
+
+
+/** to clear empty space around the canvas */
+function cropImageFromCanvas(ctx, canvas) {
+
+    var w = canvas.width,
+        h = canvas.height,
+        pix = {
+            x: [],
+            y: []
+        },
+        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height),
+        x, y, index;
+
+    for (y = 0; y < h; y++) {
+        for (x = 0; x < w; x++) {
+            index = (y * w + x) * 4;
+            if (imageData.data[index + 3] > 0) {
+
+                pix.x.push(x);
+                pix.y.push(y);
+
+            }
+        }
+    }
+    pix.x.sort(function (a, b) {
+        return a - b
+    });
+    pix.y.sort(function (a, b) {
+        return a - b
+    });
+    var n = pix.x.length - 1;
+
+    w = pix.x[n] - pix.x[0];
+    h = pix.y[n] - pix.y[0];
+    var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+
+    canvas.width = w;
+    canvas.height = h;
+    ctx.putImageData(cut, 0, 0);
 }

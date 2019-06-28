@@ -13,10 +13,10 @@
     <title>Print A3 Page</title>
     <!-- import jquery lib -->
     <script src="./assets/node_modules/jquery/dist/jquery.js"></script>
-
-    <!-- import semantic ui lib -->
+    <!-- 
+     import semantic ui lib
     <script src="./assets/node_modules/semantic-ui/dist/semantic.js"></script>
-    <link rel="stylesheet" href="./assets/node_modules/semantic-ui/dist/semantic.css">
+    <link rel="stylesheet" href="./assets/node_modules/semantic-ui/dist/semantic.css"> -->
 
     <!-- import text editor -->
     <script src="./assets/node_modules/quill/dist/quill.js"></script>
@@ -31,80 +31,104 @@
 </head>
 
 <body>
-    <div class="mainContainer" id="mainContainer"></div>
+    <div class="mainContainer" id="mainContainer">
+        <div class="imageBackgrounder" id="imageBackgrounder"></div>
+        <div class="titleContainer" id="titleContainer"></div>
+        <div class="imageContainer" id="imageContainer"></div>
+        <div class="discreptionContainer" id="discreptionContainer"></div>
+        <div class="newPriceContainer" id="newPriceContainer"></div>
+        <div class="oldPriceContainer" id="oldPriceContainer"></div>
+        <div class="manufacturerContainer" id="manufacturerContainer"></div>
+        <div class="noteContainer" id="noteContainer"></div>
+    </div>
 </body>
 <style>
+    .mainContainer {
+        height: 290mm;
+        width: 415mm;
+        margin: 0px;
+    }
+
+    .titleContainer {
+        position: absolute;
+        top: 25px;
+        left: 50px;
+        font-size: 4em;
+        word-break: break-all;
+    }
+
+    .imageContainer {
+        position: absolute;
+        right: 50px;
+    }
+
+    .discreptionContainer {
+        position: absolute;
+        left: 50px;
+        max-width: 180mm;
+        word-break: break-all;
+        font-size: 1.5em;
+    }
+
+    .newPriceContainer {
+        position: absolute;
+        bottom: 50px;
+        left: 50px;
+        font-size: 6em;
+    }
+
+    .oldPriceContainer {
+        position: absolute;
+        text-decoration-line: line-through;
+        font-size: 5em;
+    }
+
+    .manufacturerContainer {
+        position: absolute;
+        right: 50px;
+        border:1px solid white;
+        padding: 3px;
+    }
+
+    .imageBackgrounder {
+        width: 100%;
+        height: 100%;
+        opacity: 0.2;
+    }
+
+    .noteContainer {
+        position: absolute;
+        right: 50px;
+        bottom: 50px;
+    }
+
     /** PRINT OPTIONS **/
     @media print {
         @page {
             size: A3 landscape;
             /* this affects the margin in the printer settings */
-            margin: 3mm 3mm 3mm 3mm;
-
-        }
-        .mainContainer {
-            width: 100%;
-            height: 100%;
-            margin: 0px;
+            margin: 0mm 0mm 0mm 0mm;
         }
     }
 
     body {
         -webkit-print-color-adjust: exact !important;
-    }
-
-    span {
-        color: black;
-    }
-
-    .productTitleField {
-        position: fixed;
-        top: 50px;
-        left: 10px;
-        font-size: 90px;
-        width: 100%;
-    }
-
-    .productManufacturerField {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        font-size: 25;
-    }
-
-    .productNewPriceField {
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-    }
-
-    .productOldPriceField {
-        position: fixed;
-        right: 10px;
-        bottom: 10px;
+        padding: 0px !important;
+        font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        font-weight: 900;
+        color: white;
     }
 
     ._UPLOADED_FILE {
-        position: fixed;
-        right: 10px;
-        top: 100px;
-        height: 70%;
+        -webkit-filter: drop-shadow(5px 5px 5px #222);
+        filter: drop-shadow(5px 5px 5px #222);
     }
 
-    .editor {
-        position: fixed;
-        left: 10px;
-        top: 200px;
-        width: 49;
-    }
-
-    span {
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
-    }
-
-    .mainContainer {
-        width: 100%;
-        height: 100%;
+    .discreptionContainer H1,
+    .discreptionContainer P {
+        font-size: 80;
+        margin: 0px;
+        padding: 0px;
     }
 
     /**
