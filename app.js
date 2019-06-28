@@ -45,7 +45,7 @@ ipcMain.on("chan", (event, args) => {
         webPreferences: {
             nodeIntegration: true
         },
-        show: false
+     
     });
 
     printWindow.loadFile(__dirname + `/views/${selectedPageSize}.html`);
@@ -53,9 +53,9 @@ ipcMain.on("chan", (event, args) => {
      * after finishing load the window
      * it should send the stored data to secound window
      */
-    printWindow.close();
+
     printWindow.webContents.on("did-finish-load", () => {
-        printWindow.webContents.send("dataToPrint", storedData);
+        printWindow.webContents.send("dataToPrint" + selectedPageSize, storedData);
         /**
          * load the requiered file
          */
@@ -74,12 +74,13 @@ ipcMain.on("chan", (event, args) => {
                             title: "File Saved",
                             message: "Location : " + path
                         });
+                        require("openurl").open(`file://` + path);
                     } else {
                         dialog.showMessageBox({
                             title: "Error Saving File.",
                             message: "ERROR : " + err
                         });
-                        
+
                     }
                 });
             }

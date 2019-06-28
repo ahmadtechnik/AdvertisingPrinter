@@ -1,7 +1,7 @@
 // init electron object
 var electron = require("electron");
 
-electron.ipcRenderer.on("dataToPrint", (event, arg) => {
+electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     var productTitleField = arg.productTitleField;
     var productNoteField = arg.productNoteField;
     var productOldPriceField = arg.productOldPriceField;
@@ -28,6 +28,7 @@ electron.ipcRenderer.on("dataToPrint", (event, arg) => {
     var _UPLOADED_FILEELEMENT = $(`<img class="_UPLOADED_FILE" src="${_UPLOADED_FILE}" />`);
     var editorELEMENT = $(`<div class="editor">${editor}</div>`)
 
+    
 
     $(`#titleContainer`).append(productTitleFieldELEMENT);
     $(`#noteContainer`).append(productNoteFieldELEMENT);
@@ -54,11 +55,13 @@ electron.ipcRenderer.on("dataToPrint", (event, arg) => {
     $(`#discreptionContainer`).css("top", ($(`#titleContainer`).height() / 2) + 100);
     $(`#imageContainer`).css("top", ($(`#titleContainer`).height() / 2) + 100);
     $(`#oldPriceContainer`).css("bottom", $(`#newPriceContainer`).height() + 10);
-    $(`#oldPriceContainer`).css("left", $(`#newPriceContainer`).width() - $(`#oldPriceContainer`).width() + 50);
+    $(`#oldPriceContainer`).css("left", $(`#newPriceContainer`).width() - $(`#oldPriceContainer`).width() + 80);
     $(`#manufacturerContainer`).css({
         "top": ($(`#titleContainer`).height() / 2) + 50,
         "background": pageBackgroundColorDropdown,
     });
+  
+
     console.log(pageBackgroundColorDropdown)
     /* 
         $.each($("div"), (index, value) => {
