@@ -313,10 +313,12 @@ var imageEditorModalOptions = {
     },
     onApprove: () => {
         if (_IMAGE_EDITOR_ !== null) {
+            // init the image editor
             var croppedCanvas = _IMAGE_EDITOR_.getCroppedCanvas({
                 width: 480,
                 height: 720,
             });
+
             var gettedContext = croppedCanvas.getContext("2d");
 
             cropImageFromCanvas(gettedContext, croppedCanvas);
@@ -329,10 +331,15 @@ var imageEditorModalOptions = {
         });
     },
     onVisible: () => {
+        console.log(_ALL_DATA_STORED.pageSizeDropdown);
+        var AspectTatio = 2 / 3 ;
+        if(_ALL_DATA_STORED.pageSizeDropdown === "a6"){
+            AspectTatio = 16 / 9;
+        }
         _IMAGE_EDITOR_ = new Cropper(_IMAGE_TO_CORP, {
             viewMode: 1,
         });
-        _IMAGE_EDITOR_.setAspectRatio(2 / 3)
+        _IMAGE_EDITOR_.setAspectRatio(AspectTatio)
     }
 }
 /** extentions */

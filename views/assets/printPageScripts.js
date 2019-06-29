@@ -151,18 +151,18 @@ electron.ipcRenderer.on("dataToPrinta6", (event, arg) => {
         "left": (bodyObject.width() / 2) - ($(`#imageContainer`).height() / 3),
     });
 
-    $(`#discreptionContainer`).css({
-
-    });
-
+    //$(`#discreptionContainer`).css();
+    $(`#noteContainer`).css({
+        top: $(`#discreptionContainer`).height() / 2,
+    })
     $(`#oldPriceContainer`).css({
         top: bodyObject.height() - $(`#newPriceContainer`).height() - $(`#oldPriceContainer`).height() + 15,
-        left: 25
+        left: 50
     });
 
     $(`#newPriceContainer`).css({
         top: bodyObject.height() - $(`#newPriceContainer`).height(),
-        left: 25
+        left: 50
     });
 
     $(`#manufacturerContainer`).css({

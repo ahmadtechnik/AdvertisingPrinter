@@ -37,10 +37,12 @@
         <div class="imageContainer" id="imageContainer"></div>
         <div class="discreptionContainer" id="discreptionContainer"></div>
 
+        <div class="noteContainer" id="noteContainer"></div>
+
         <div class="newPriceContainer" id="newPriceContainer"></div>
         <div class="oldPriceContainer" id="oldPriceContainer"></div>
 
-        <div class="noteContainer" id="noteContainer"></div>
+
 
 
     </div>
@@ -55,15 +57,16 @@
             /* this affects the margin in the printer settings */
             margin: 0mm 0mm 0mm 0mm;
         }
+
         body {
-        -webkit-print-color-adjust: exact !important;
-        padding: 0px !important;
-        font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-        font-weight: 900;
-        color: white;
-        height: 210mm;
-        width: 148mm;
-    }
+            -webkit-print-color-adjust: exact !important;
+            padding: 0px !important;
+            font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            color: white;
+            height: 210mm;
+            width: 148mm;
+        }
     }
 
     .mainContainer {
@@ -83,19 +86,27 @@
     .imageContainer {
         position: relative;
         width: fit-content;
+        top: 25px;
     }
 
     .discreptionContainer {
         position: relative;
         width: fit-content;
-        left: 10px;
-        top: 5px;
+        left: 25px;
+        top: 50px;
+    }
+
+    .noteContainer {
+        position: relative;
+        text-align: center;
+        top : 10px;
     }
 
     .newPriceContainer {
         position: absolute;
         width: fit-content;
         font-size: 60px;
+
     }
 
     .oldPriceContainer {
@@ -112,16 +123,10 @@
         z-index: 10000;
         left: 20px;
         border: 1px solid white;
+        font-size: 30px;
     }
 
-    .noteContainer {
-        position: relative;
-        width: 100%;
-        top: 10px;
-        text-align: center;
-        font-weight: 100;
-        font-size: 12px;
-    }
+
 
 
     .imageBackgrounder {
@@ -134,10 +139,10 @@
         opacity: .3;
     }
 
-.backfroundColored{
-    position: fixed;
-    z-index: -999999;
-}
+    .backfroundColored {
+        position: fixed;
+        z-index: -999999;
+    }
 
     .discreptionContainer H1,
     .discreptionContainer P {

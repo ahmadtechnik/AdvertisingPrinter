@@ -46,7 +46,7 @@ ipcMain.on("chan", (event, args) => {
         webPreferences: {
             nodeIntegration: true
         },
-        //show: false
+        show: false
     });
 
     printWindow.loadFile(__dirname + `/views/${selectedPageSize}.html`);
