@@ -41,11 +41,12 @@ ipcMain.on("chan", (event, args) => {
         width: 800,
         height: 600,
         modal: true,
+        fullscreen: true,
         parent: mainWind,
         webPreferences: {
             nodeIntegration: true
         },
-     
+        //show: false
     });
 
     printWindow.loadFile(__dirname + `/views/${selectedPageSize}.html`);
@@ -56,33 +57,42 @@ ipcMain.on("chan", (event, args) => {
 
     printWindow.webContents.on("did-finish-load", () => {
         printWindow.webContents.send("dataToPrint" + selectedPageSize, storedData);
+        var landScape = true;
+        if (selectedPageSize.toUpperCase() === "A6") {
+            selectedPageSize = "A4"
+            landScape = false
+        }
         /**
          * load the requiered file
          */
         // write File to home Desktop
         printWindow.webContents.printToPDF({
             printBackground: true,
-            landscape: true,
-            pageSize: "A3"
+            landscape: landScape,
+            pageSize: selectedPageSize.toUpperCase()
         }, (error, data) => {
             if (!error) {
                 var path = require("path").join(HOME_DIR + "/Desktop/") + "NewAdvi.pdf";
                 fs.writeFile(path, data, (err) => {
                     if (!err) {
+                        
                         printWindow.webContents.send("savedFilePath", path);
+
                         dialog.showMessageBox({
                             title: "File Saved",
                             message: "Location : " + path
                         });
                         require("openurl").open(`file://` + path);
-                    } else {
-                        dialog.showMessageBox({
-                            title: "Error Saving File.",
-                            message: "ERROR : " + err
-                        });
 
+                        printWindow.close();
+                        
+                    } else {
+                        dialog.showErrorBox("Error Saving File.", "ERROR : " + err + "\n Please notes that, maybe the old file still opened");
+                        printWindow.close();
                     }
                 });
+            } else {
+                console.log(error);
             }
         });
     });
@@ -90,5 +100,6 @@ ipcMain.on("chan", (event, args) => {
     /** to clear RAM after window closed */
     printWindow.on("closed", () => {
         printWindow = null;
+        console.log("closed")
     })
 })

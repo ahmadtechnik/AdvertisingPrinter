@@ -24,7 +24,6 @@
     <link rel="stylesheet" href="assets/node_modules/jquery-ui-dist/jquery-ui.css">
     <!-- import main stylesheet file -->
     <link rel="stylesheet" href="assets/main.css">
-
     <!-- import image editor -->
     <link rel="stylesheet" href="./assets/node_modules/cropperjs/dist/cropper.css">
     <script src="./assets/node_modules/cropperjs/dist/cropper.js"></script>
@@ -48,6 +47,7 @@
                         <div class="field">
                             <label for="">Product Title</label>
                             <input type="text" name="" id="productTitleField">
+                            <span class="underInputFieldText">This Field accept only 15 Chars</span>
                         </div>
                         <div class="field">
                             <label for="">Product New Price</label>
@@ -56,6 +56,7 @@
                                 <input type="text" placeholder="New Price" id="productNewPriceField">
                                 <div class="ui basic label">.99</div>
                             </div>
+                            <span class="underInputFieldText">This Field accept only 4 Chars</span>
                         </div>
                         <div class="field">
                             <label for="">Product Old Price</label>
@@ -64,6 +65,7 @@
                                 <input type="text" placeholder="Old Price" id="productOldPriceField">
                                 <div class="ui basic label">.99</div>
                             </div>
+                            <span class="underInputFieldText">This Field accept only 4 Chars</span>
                         </div>
                     </div>
                     <div class="two fields">
@@ -83,7 +85,9 @@
         <div class="one column row">
             <div class="column" id="textEditorContainer">
                 <div style="padding: 20px;">
+                    <label for="editor">Product Description</label>
                     <div id="editor"></div>
+                    <span class="underInputFieldText ">This Editor accept only 8 Lines</span>
                 </div>
             </div>
         </div>

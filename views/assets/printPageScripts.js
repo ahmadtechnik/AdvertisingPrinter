@@ -1,5 +1,7 @@
 // init electron object
 var electron = require("electron");
+var _EDITOR = null;
+
 
 electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     var productTitleField = arg.productTitleField;
@@ -28,7 +30,7 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     var _UPLOADED_FILEELEMENT = $(`<img class="_UPLOADED_FILE" src="${_UPLOADED_FILE}" />`);
     var editorELEMENT = $(`<div class="editor">${editor}</div>`)
 
-    
+
 
     $(`#titleContainer`).append(productTitleFieldELEMENT);
     $(`#noteContainer`).append(productNoteFieldELEMENT);
@@ -52,20 +54,123 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     });
 
     // set postions
-    $(`#discreptionContainer`).css("top", ($(`#titleContainer`).height() / 2) + 100);
-    $(`#imageContainer`).css("top", ($(`#titleContainer`).height() / 2) + 100);
+    $(`#discreptionContainer`).css("top", ($(`#titleContainer`).height()) + 100);
+    $(`#imageContainer`).css("top", $(`#titleContainer`).offset().top + $(`#titleContainer`).height());
     $(`#oldPriceContainer`).css("bottom", $(`#newPriceContainer`).height() + 10);
     $(`#oldPriceContainer`).css("left", $(`#newPriceContainer`).width() - $(`#oldPriceContainer`).width() + 80);
     $(`#manufacturerContainer`).css({
-        "top": ($(`#titleContainer`).height() / 2) + 50,
+        "top": $(`#titleContainer`).offset().top + $(`#titleContainer`).height(),
         "background": pageBackgroundColorDropdown,
     });
-  
 
-    console.log(pageBackgroundColorDropdown)
-    /* 
+
+    /*
+            $.each($("div"), (index, value) => {
+                console.log(value);
+                $(value).css({
+                    "border-color": "white",
+                    "border-width": "1px",
+                    "border-style": "solid"
+                });
+            });
+        */
+});
+
+
+electron.ipcRenderer.on("dataToPrinta6", (event, arg) => {
+    var productTitleField = arg.productTitleField;
+    var productNoteField = arg.productNoteField;
+    var productOldPriceField = arg.productOldPriceField;
+    var productNoteField = arg.productNoteField;
+    var productNewPriceField = arg.productNewPriceField;
+    var productManufacturerField = arg.productManufacturerField;
+    var pageSizeDropdown = arg.pageSizeDropdown;
+    var pageBackgroundColorDropdown = arg.pageBackgroundColorDropdown;
+    var _UPLOADED_FILE = arg._UPLOADED_FILE;
+    var editor = arg.editor;
+
+    var bodyObject = $(`#mainContainer`);
+    var imageBackGrounde = $(`#imageBackgrounder`);
+    var backfroundColored = $(`#backfroundColored`);
+    var body = $(`body`);
+
+    var productTitleFieldELEMENT = $(`<span class="productTitleField">${productTitleField}</span>`);
+    var productNoteFieldELEMENT = $(`<span class="productNoteField">${productNoteField}</span>`);
+    var productOldPriceFieldELEMENT = productOldPriceField !== "" ?
+        $(`<span class="productOldPriceField">${productOldPriceField}.99€</span>`) : "";
+    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${productNewPriceField}.99€</span>`);
+    var productManufacturerFieldELEMENT = $(`<span class="productManufacturerField">${productManufacturerField}</span>`);
+    var pageSizeDropdownELEMENT = $(`<span class="pageSizeDropdown">${pageSizeDropdown}</span>`);
+    var pageBackgroundColorDropdownELEMENT = $(`<span class="pageBackgroundColorDropdown">${pageBackgroundColorDropdown}</span>`);
+    var _UPLOADED_FILEELEMENT = $(`<img class="_UPLOADED_FILE" src="${_UPLOADED_FILE}" />`);
+    var editorELEMENT = $(`<div class="editor">${editor}</div>`)
+
+
+
+    $(`#titleContainer`).append(productTitleFieldELEMENT);
+    $(`#noteContainer`).append(productNoteFieldELEMENT);
+    $(`#oldPriceContainer`).append(productOldPriceFieldELEMENT);
+    $(`#newPriceContainer`).append(productNewPriceFieldELEMENT);
+    $(`#manufacturerContainer`).append(productManufacturerFieldELEMENT);
+    $(`#imageContainer`).append(_UPLOADED_FILEELEMENT);
+    _UPLOADED_FILEELEMENT.css("height", "150");
+    $(`#discreptionContainer`).append(editorELEMENT)
+
+
+    //body.css("background", pageBackgroundColorDropdown);
+
+    imageBackGrounde.css({
+        "background": pageBackgroundColorDropdown,
+        "background-image": `url('${_UPLOADED_FILE}')`,
+        "background-position": "center",
+        /* Center the image */
+        "background-repeat": "no-repeat",
+        /* Do not repeat the image */
+        "background-size": "contain",
+        width: bodyObject.width(),
+        height: bodyObject.height(),
+        "top": bodyObject.offset().top,
+        "left": bodyObject.offset().left
+    });
+
+    backfroundColored.css({
+        "background": pageBackgroundColorDropdown,
+        width: bodyObject.width(),
+        height: bodyObject.height(),
+        "top": bodyObject.offset().top,
+        "left": bodyObject.offset().left
+    });
+
+    // set postions
+    $(`#titleContainer`).css({
+        top: "50",
+        left: (bodyObject.width() / 2) - ($(`#titleContainer`).width() / 2)
+    });
+
+    $(`#imageContainer`).css({
+        "left": (bodyObject.width() / 2) - ($(`#imageContainer`).height() / 3),
+    });
+
+    $(`#discreptionContainer`).css({
+
+    });
+
+    $(`#oldPriceContainer`).css({
+        top: bodyObject.height() - $(`#newPriceContainer`).height() - $(`#oldPriceContainer`).height() + 15,
+        left: 25
+    });
+
+    $(`#newPriceContainer`).css({
+        top: bodyObject.height() - $(`#newPriceContainer`).height(),
+        left: 25
+    });
+
+    $(`#manufacturerContainer`).css({
+        "background": pageBackgroundColorDropdown,
+    });
+    /*
         $.each($("div"), (index, value) => {
-            console.log(value);
+
             $(value).css({
                 "border-color": "white",
                 "border-width": "1px",
@@ -74,6 +179,7 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
         });
     */
 });
+
 
 electron.ipcRenderer.on("savedFilePath", (event, arg) => {
     //alert(arg);

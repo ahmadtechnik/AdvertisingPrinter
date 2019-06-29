@@ -14,6 +14,13 @@ var electron = require("electron");
 $(document).ready(() => {
 
     _EDITOR = new Quill('#editor', options);
+    _EDITOR.on('text-change', function (delta, oldDelta, source) {
+        if (_EDITOR.getLines().length >= 8) {
+            $(_EDITOR.container.offsetParent).find(".underInputFieldText").css("color" , "red");
+        }else{
+            $(_EDITOR.container.offsetParent).find(".underInputFieldText").css("color" , "gray");
+        }
+    });
 
     /** init elements */
     // 
@@ -32,7 +39,8 @@ $(document).ready(() => {
     $(`#printBtnAction`).click(onPrintBtnAction);
     // set on upload btn change
     $(`#uploadedFileButton`).change(onUploadBtnChnge);
-
+    // to lock any input filed
+    $(`input[type="text"]`).keydown(setInputFieldsLength)
 });
 
 /**
@@ -71,8 +79,6 @@ var onPrintBtnAction = (event) => {
 
                         /** to convert the uploaded image to base64 */
                         getBase64(_UPLOADED_FILE, (result) => {
-
-
                             _ALL_DATA_STORED = {
                                 productTitleField: productTitleField.val(),
                                 productNewPriceField: productNewPriceField.val(),
@@ -144,9 +150,9 @@ var onUploadBtnChnge = (event) => {
         if (file[0].type === "image/png") {
             _UPLOADED_FILE = file[0];
             uploadFileFakeButton.switchClass("blue", "green");
-        }else{
+        } else {
             _UPLOADED_FILE = null;
-            uploadFileFakeButton.switchClass("green", "blue"); 
+            uploadFileFakeButton.switchClass("green", "blue");
         }
     } else {
         _UPLOADED_FILE = null;
@@ -269,6 +275,35 @@ function startProcessDataA6Size(data) {
 
 }
 
+function setInputFieldsLength(event) {
+    var thisValue = $(this).val();
+    var thisID = $(this).attr("id");
+    var keyCode = event.keyCode;
+
+    if (keyCode !== 8) {
+        switch (thisID) {
+            case "productTitleField":
+                if (thisValue.length > 15) {
+                    $(this).parent().find("span[class='underInputFieldText']").css("color", "red");
+                    return false;
+                }
+                break;
+            case "productNewPriceField":
+                if (thisValue.length > 3) {
+                    $(this).parent().parent().find("span[class='underInputFieldText']").css("color", "red");
+                    return false;
+                }
+                break;
+            case "productOldPriceField":
+                if (thisValue.length > 3) {
+                    $(this).parent().parent().find("span[class='underInputFieldText']").css("color", "red");
+                    return false;
+                }
+                break;
+        }
+    }
+    $("span[class='underInputFieldText']").css("color", "gray");
+}
 /**
  * define image editor modal options
  */

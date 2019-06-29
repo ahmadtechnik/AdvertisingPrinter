@@ -7,3 +7,7 @@
     right: 10px;
     bottom: 10px;
 }
+.underInputFieldText{
+    color: gray;
+    font-size: 12px;
+}
