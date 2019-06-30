@@ -22,8 +22,9 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     var productTitleFieldELEMENT = $(`<span class="productTitleField">${productTitleField}</span>`);
     var productNoteFieldELEMENT = $(`<span class="productNoteField">${productNoteField}</span>`);
     var productOldPriceFieldELEMENT = productOldPriceField !== "" ?
-        $(`<span class="productOldPriceField">${productOldPriceField}.99€</span>`) : "";
-    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${productNewPriceField}.99€</span>`);
+        $(`<span class="productOldPriceField">${
+            euroFractionsFilter(productOldPriceField)}</span>`) : "";
+    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${euroFractionsFilter(productNewPriceField) }</span>`);
     var productManufacturerFieldELEMENT = $(`<span class="productManufacturerField">${productManufacturerField}</span>`);
     var pageSizeDropdownELEMENT = $(`<span class="pageSizeDropdown">${pageSizeDropdown}</span>`);
     var pageBackgroundColorDropdownELEMENT = $(`<span class="pageBackgroundColorDropdown">${pageBackgroundColorDropdown}</span>`);
@@ -54,7 +55,10 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     });
 
     // set postions
-    $(`#discreptionContainer`).css("top", ($(`#titleContainer`).height()) + 100);
+    $(`#discreptionContainer`).css({
+        "top": ($(`#titleContainer`).height()) + 50,
+
+    });
     $(`#imageContainer`).css("top", $(`#titleContainer`).offset().top + $(`#titleContainer`).height());
     $(`#oldPriceContainer`).css("bottom", $(`#newPriceContainer`).height() + 10);
     $(`#oldPriceContainer`).css("left", $(`#newPriceContainer`).width() - $(`#oldPriceContainer`).width() + 80);
@@ -63,17 +67,16 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
         "background": pageBackgroundColorDropdown,
     });
 
-
     /*
-            $.each($("div"), (index, value) => {
-                console.log(value);
-                $(value).css({
-                    "border-color": "white",
-                    "border-width": "1px",
-                    "border-style": "solid"
+                $.each($("div"), (index, value) => {
+                    //console.log(value);
+                    $(value).css({
+                        "border-color": "white",
+                        "border-width": "1px",
+                        "border-style": "solid"
+                    });
                 });
-            });
-        */
+            */
 });
 
 
@@ -97,8 +100,9 @@ electron.ipcRenderer.on("dataToPrinta6", (event, arg) => {
     var productTitleFieldELEMENT = $(`<span class="productTitleField">${productTitleField}</span>`);
     var productNoteFieldELEMENT = $(`<span class="productNoteField">${productNoteField}</span>`);
     var productOldPriceFieldELEMENT = productOldPriceField !== "" ?
-        $(`<span class="productOldPriceField">${productOldPriceField}.99€</span>`) : "";
-    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${productNewPriceField}.99€</span>`);
+        $(`<span class="productOldPriceField">${
+            euroFractionsFilter(productOldPriceField)}</span>`) : "";
+    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${euroFractionsFilter(productNewPriceField) }</span>`);
     var productManufacturerFieldELEMENT = $(`<span class="productManufacturerField">${productManufacturerField}</span>`);
     var pageSizeDropdownELEMENT = $(`<span class="pageSizeDropdown">${pageSizeDropdown}</span>`);
     var pageBackgroundColorDropdownELEMENT = $(`<span class="pageBackgroundColorDropdown">${pageBackgroundColorDropdown}</span>`);
@@ -196,3 +200,11 @@ var _A3_PAGE_SIZES = {
     height: 3508,
     width: 4961
 };
+
+var euroFractionsFilter = (numener) => {
+    if (numener.substr(numener.length - 1) === "9") {
+        return numener + ".99<sup>€</sup>";
+    } else {
+        return numener + "<sup>€</sup>";
+    }
+}

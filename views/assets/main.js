@@ -147,12 +147,13 @@ var onUploadBtnChnge = (event) => {
     var uploadFileFakeButton = $(`#uploadFileFakeButton`);
 
     if (file.length > 0) {
-        if (file[0].type === "image/png") {
+        if (file[0].type === "image/png" || file[0].type === "image/jpg" || file[0].type === "image/jpeg") {
             _UPLOADED_FILE = file[0];
             uploadFileFakeButton.switchClass("blue", "green");
         } else {
             _UPLOADED_FILE = null;
             uploadFileFakeButton.switchClass("green", "blue");
+            alert("THIS KIND OF FILES DOES NOT ACCEPTABLE")
         }
     } else {
         _UPLOADED_FILE = null;
@@ -258,22 +259,9 @@ $.each(colorsArray, (index, element) => {
         name: `<a class="ui label mini ${element}">${selectedColor}</a>`,
         value: `${selectedColor}`
     });
+    div.remove();
 })
 
-/**
- * to open new window with all stored data
- */
-function startProcessDataA3Size(data) {
-
-}
-
-function startProcessDataA4Size(data) {
-
-}
-
-function startProcessDataA6Size(data) {
-
-}
 
 function setInputFieldsLength(event) {
     var thisValue = $(this).val();
@@ -331,13 +319,13 @@ var imageEditorModalOptions = {
         });
     },
     onVisible: () => {
-        console.log(_ALL_DATA_STORED.pageSizeDropdown);
+        
         var AspectTatio = 2 / 3 ;
         if(_ALL_DATA_STORED.pageSizeDropdown === "a6"){
-            AspectTatio = 16 / 9;
+            AspectTatio = null;
         }
         _IMAGE_EDITOR_ = new Cropper(_IMAGE_TO_CORP, {
-            viewMode: 1,
+            viewMode: 2,
         });
         _IMAGE_EDITOR_.setAspectRatio(AspectTatio)
     }
@@ -359,10 +347,8 @@ function getBase64(file, afterFinish) {
 }
 
 
-
 /** to clear empty space around the canvas */
 function cropImageFromCanvas(ctx, canvas) {
-
     var w = canvas.width,
         h = canvas.height,
         pix = {
@@ -371,15 +357,12 @@ function cropImageFromCanvas(ctx, canvas) {
         },
         imageData = ctx.getImageData(0, 0, canvas.width, canvas.height),
         x, y, index;
-
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
             index = (y * w + x) * 4;
             if (imageData.data[index + 3] > 0) {
-
                 pix.x.push(x);
                 pix.y.push(y);
-
             }
         }
     }
@@ -389,6 +372,7 @@ function cropImageFromCanvas(ctx, canvas) {
     pix.y.sort(function (a, b) {
         return a - b
     });
+
     var n = pix.x.length - 1;
 
     w = pix.x[n] - pix.x[0];
@@ -398,4 +382,5 @@ function cropImageFromCanvas(ctx, canvas) {
     canvas.width = w;
     canvas.height = h;
     ctx.putImageData(cut, 0, 0);
+    
 }
