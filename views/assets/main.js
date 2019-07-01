@@ -16,9 +16,9 @@ $(document).ready(() => {
     _EDITOR = new Quill('#editor', options);
     _EDITOR.on('text-change', function (delta, oldDelta, source) {
         if (_EDITOR.getLines().length >= 8) {
-            $(_EDITOR.container.offsetParent).find(".underInputFieldText").css("color" , "red");
-        }else{
-            $(_EDITOR.container.offsetParent).find(".underInputFieldText").css("color" , "gray");
+            $(_EDITOR.container.offsetParent).find(".underInputFieldText").css("color", "red");
+        } else {
+            $(_EDITOR.container.offsetParent).find(".underInputFieldText").css("color", "gray");
         }
     });
 
@@ -267,7 +267,6 @@ function setInputFieldsLength(event) {
     var thisValue = $(this).val();
     var thisID = $(this).attr("id");
     var keyCode = event.keyCode;
-
     if (keyCode !== 8) {
         switch (thisID) {
             case "productTitleField":
@@ -303,8 +302,8 @@ var imageEditorModalOptions = {
         if (_IMAGE_EDITOR_ !== null) {
             // init the image editor
             var croppedCanvas = _IMAGE_EDITOR_.getCroppedCanvas({
-                width: 480,
-                height: 720,
+                width: returnImageSize().w,
+                height: returnImageSize().h,
             });
 
             var gettedContext = croppedCanvas.getContext("2d");
@@ -317,11 +316,32 @@ var imageEditorModalOptions = {
             selectedPageSize: _ALL_DATA_STORED.pageSizeDropdown,
             data: _ALL_DATA_STORED
         });
+        /**
+         *  to get the best size of the preview photo 
+         */
+        function returnImageSize() {
+            var obj = {};
+            switch (_ALL_DATA_STORED.pageSizeDropdown) {
+                case "a6":
+                    obj = {
+                        w: 320,
+                        h: 180
+                    }
+                    break;
+                case "a3":
+                    obj = {
+                        w: 480,
+                        h: 720
+                    }
+                    break;
+            }
+            return obj;
+        }
     },
+
     onVisible: () => {
-        
-        var AspectTatio = 2 / 3 ;
-        if(_ALL_DATA_STORED.pageSizeDropdown === "a6"){
+        var AspectTatio = 2 / 3;
+        if (_ALL_DATA_STORED.pageSizeDropdown === "a6") {
             AspectTatio = null;
         }
         _IMAGE_EDITOR_ = new Cropper(_IMAGE_TO_CORP, {
@@ -382,5 +402,5 @@ function cropImageFromCanvas(ctx, canvas) {
     canvas.width = w;
     canvas.height = h;
     ctx.putImageData(cut, 0, 0);
-    
+
 }

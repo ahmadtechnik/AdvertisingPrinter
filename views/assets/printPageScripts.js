@@ -68,15 +68,15 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     });
 
     /*
-                $.each($("div"), (index, value) => {
-                    //console.log(value);
-                    $(value).css({
-                        "border-color": "white",
-                        "border-width": "1px",
-                        "border-style": "solid"
-                    });
-                });
-            */
+    $.each($("div"), (index, value) => {
+        //console.log(value);
+        $(value).css({
+            "border-color": "white",
+            "border-width": "1px",
+            "border-style": "solid"
+        });
+    });
+    */
 });
 
 
@@ -106,19 +106,20 @@ electron.ipcRenderer.on("dataToPrinta6", (event, arg) => {
     var productManufacturerFieldELEMENT = $(`<span class="productManufacturerField">${productManufacturerField}</span>`);
     var pageSizeDropdownELEMENT = $(`<span class="pageSizeDropdown">${pageSizeDropdown}</span>`);
     var pageBackgroundColorDropdownELEMENT = $(`<span class="pageBackgroundColorDropdown">${pageBackgroundColorDropdown}</span>`);
-    var _UPLOADED_FILEELEMENT = $(`<img class="_UPLOADED_FILE" src="${_UPLOADED_FILE}" />`);
+    var _UPLOADED_FILEELEMENT = $(`<img class="_UPLOADED_FILE" src="${_UPLOADED_FILE}" id="_UPLOADED_FILE" />`);
+    _UPLOADED_FILEELEMENT.height(150)
     var editorELEMENT = $(`<div class="editor">${editor}</div>`)
 
 
 
     $(`#titleContainer`).append(productTitleFieldELEMENT);
+    $(`#imageContainer`).append(_UPLOADED_FILEELEMENT);
+    $(`#manufacturerContainer`).append(productManufacturerFieldELEMENT);
+    $(`#discreptionContainer`).append(editorELEMENT)
     $(`#noteContainer`).append(productNoteFieldELEMENT);
     $(`#oldPriceContainer`).append(productOldPriceFieldELEMENT);
     $(`#newPriceContainer`).append(productNewPriceFieldELEMENT);
-    $(`#manufacturerContainer`).append(productManufacturerFieldELEMENT);
-    $(`#imageContainer`).append(_UPLOADED_FILEELEMENT);
-    _UPLOADED_FILEELEMENT.css("height", "150");
-    $(`#discreptionContainer`).append(editorELEMENT)
+
 
 
     //body.css("background", pageBackgroundColorDropdown);
@@ -147,41 +148,52 @@ electron.ipcRenderer.on("dataToPrinta6", (event, arg) => {
 
     // set postions
     $(`#titleContainer`).css({
-        top: "50",
+
         left: (bodyObject.width() / 2) - ($(`#titleContainer`).width() / 2)
     });
-
+    //
+    var im = document.createElement("img");
+    im.src = _UPLOADED_FILE
+    im.height = 150;
+    im.setAttribute("id", "testImge");
+    document.body.appendChild(im);
     $(`#imageContainer`).css({
-        "left": (bodyObject.width() / 2) - ($(`#imageContainer`).height() / 3),
+        "left": (bodyObject.width() / 2) - (im.width / 2),
     });
+    im.remove();
+    //
+    $(`#discreptionContainer`).css({
 
-    //$(`#discreptionContainer`).css();
+    });
+    //
     $(`#noteContainer`).css({
-        top: $(`#discreptionContainer`).height() / 2,
-    })
+        left: (bodyObject.width() / 2) - ($(`#noteContainer`).width() / 2)
+    });
+    //
     $(`#oldPriceContainer`).css({
         top: bodyObject.height() - $(`#newPriceContainer`).height() - $(`#oldPriceContainer`).height() + 15,
         left: 50
     });
-
+    //
     $(`#newPriceContainer`).css({
         top: bodyObject.height() - $(`#newPriceContainer`).height(),
         left: 50
     });
-
+    //
     $(`#manufacturerContainer`).css({
         "background": pageBackgroundColorDropdown,
     });
+    //
     /*
-        $.each($("div"), (index, value) => {
+    $.each($("div"), (index, value) => {
 
-            $(value).css({
-                "border-color": "white",
-                "border-width": "1px",
-                "border-style": "solid"
-            });
+        $(value).css({
+            "border-color": "white",
+            "border-width": "1px",
+            "border-style": "solid"
         });
-    */
+    });
+*/
 });
 
 

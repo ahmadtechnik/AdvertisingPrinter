@@ -9,12 +9,19 @@ const {
 } = require("electron");
 const fs = require("fs");
 var HOME_DIR = require("os").homedir();
+
+
+
+
+
 /**
  * get app ready
  */
 let mainWind;
 
 app.on("ready", () => {
+ 
+
     mainWind = new BrowserWindow({
         width: 800,
         height: 600,
@@ -36,6 +43,7 @@ ipcMain.on("chan", (event, args) => {
 
     var selectedPageSize = args.selectedPageSize;
     var storedData = args.data;
+    var fileName = args.data.productTitleField + ".pdf";
 
     printWindow = new BrowserWindow({
         width: 800,
@@ -72,27 +80,23 @@ ipcMain.on("chan", (event, args) => {
             pageSize: selectedPageSize.toUpperCase()
         }, (error, data) => {
             if (!error) {
-                var path = require("path").join(HOME_DIR + "/Desktop/") + "NewAdvi.pdf";
+                var path = require("path").join(HOME_DIR + "/Desktop/") + fileName;
                 fs.writeFile(path, data, (err) => {
                     if (!err) {
-                        
                         printWindow.webContents.send("savedFilePath", path);
-
                         dialog.showMessageBox({
                             title: "File Saved",
                             message: "Location : " + path
                         });
                         require("openurl").open(`file://` + path);
-
                         printWindow.close();
-                        
                     } else {
                         dialog.showErrorBox("Error Saving File.", "ERROR : " + err + "\n Please notes that, maybe the old file still opened");
                         printWindow.close();
                     }
                 });
             } else {
-                console.log(error);
+                dialog.showErrorBox("Error Print To PDF.", "ERROR : " + error);
             }
         });
     });
