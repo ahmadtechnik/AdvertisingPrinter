@@ -9,12 +9,13 @@ const {
 } = require("electron");
 const fs = require("fs");
 var HOME_DIR = require("os").homedir();
+var PATH = require("path")
 
-var dirExist = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/");
+var dirExist = PATH.join(HOME_DIR + "/Desktop/AdvertisingPDF/");
 if (fs.existsSync(dirExist)) {
     console.log("FOLDER EXIST");
 } else {
-    var folderMeked = fs.mkdirSync(require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF"));
+    var folderMeked = fs.mkdirSync(PATH.join(HOME_DIR + "/Desktop/AdvertisingPDF"));
     console.log("FOLDER CREATED ....");
 }
 
@@ -56,14 +57,14 @@ app.on("ready", () => {
         emitAllTamplatesNames()
     });
 
-    mainWind.setMenu(null);
+    //mainWind.setMenu(null);
 });
 var printWindow;
 ipcMain.on("chan", (event, args) => {
 
     var selectedPageSize = args.selectedPageSize;
     var storedData = args.data;
-    var fileName = args.data.productTitleField + ".pdf";
+    var fileName = args.data.productTitleField + "#" + selectedPageSize + ".pdf";
 
     printWindow = new BrowserWindow({
         width: 800,
@@ -112,47 +113,74 @@ ipcMain.on("chan", (event, args) => {
         console.log("closed")
     });
 });
+
 var counter = 1;
 
 function writeSyncFile(data, filename, args) {
-    var path = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/") + filename;
-    var dirPath = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/");
+    var path = PATH.join(HOME_DIR + "/Desktop/AdvertisingPDF/") + filename;
+    var dirPath = PATH.join(HOME_DIR + "/Desktop/AdvertisingPDF/");
 
-    fs.writeFile(path, data, (err) => {
-        if (!err) {
-            printWindow.webContents.send("savedFilePath", path);
+    checkIfFileExistCallback(path, (fileExist, path) => {
+        // in this case the file is exist
+        // and it should not be writted again
+        if (fileExist) {
             dialog.showMessageBox(mainWind, {
-                title: "File Saved",
-                message: "Location : " + path,
-                detail: path
+                title: "THIS FILE EXIST",
+                message: "Please change file name or you can also change {Product Title} to change the name automatically",
+                detail: "File Location : " + path,
+                buttons: [
+                    "Ok", "Open Old file to me."
+                ]
+            }, (response) => {
+                switch (response) {
+                    case 1:
+                        require("openurl").open(`file://` + path);
+                        break;
+                }
             });
-            require("openurl").open(`file://` + path);
-            printWindow.close();
-            // write template file
-            createTemplate(args, require("path").join("./templets/") + filename + ".json");
-        } else {
-            var newName = filename.replace(/[|&;$%@"<>()+/,]/g, "-");
-            var fileExist = fs.existsSync(require("path").join(dirPath, newName));
+        }
+        // in this case it should write the file again
+        else {
+            fs.writeFile(path, data, (err) => {
+                if (!err) {
+                    printWindow.webContents.send("savedFilePath", path);
+                    dialog.showMessageBox(mainWind, {
+                        title: "File Saved",
+                        message: "Location : " + path,
+                        detail: path
+                    });
 
-            if (fileExist) {
-                /*
-                dialog.showMessageBox(mainWind, {
-                    title: "THIS FILE EXIST",
-                    message: "This file is alredy exist.",
-                    detail: path
-                });
-                */
-            }
+                    require("openurl").open(`file://` + path);
+                    printWindow.close();
+                    // write template file
+                    createTemplate(args, PATH.join(__dirname + "/templets/") + filename + ".json");
 
-            writeSyncFile(data, newName, args);
-            // write template file
-            createTemplate(args, require("path").join("./templets/", newName + ".json"));
+                } else {
+                    var newName = filename.replace(/[|&;$%@"<>()+/,]/g, "-");
+                    /** if the same file was not exist or opened */
+                    writeSyncFile(data, newName, args);
+                    // write template file
+                    createTemplate(args, PATH.join(__dirname + "/templets/", newName + ".json"));
+                    // 
+                    console.log("FILE PATH : ", newName);
+                    counter++;
+                    console.log(counter);
+                    /*
+                          dialog.showErrorBox("ERROR AFTER 2 TRIES.",
+                              "This program could not write the file because of one of those issue: (1 - some file with same name is oppend. )");
+                      */
+
+                }
+            });
         }
     });
+
+
 }
 
 /** funciton to create JSON template */
 function createTemplate(data, fileName) {
+    console.log(fileName);
     var fileExist = fs.existsSync(fileName);
 
     fs.writeFile(fileName, JSON.stringify(data), 'utf8', (err) => {
@@ -167,10 +195,20 @@ function createTemplate(data, fileName) {
 /** to emit all tamplates Name to render */
 function emitAllTamplatesNames() {
     // read all tamplates names 
-    var allTamplates = fs.readdirSync(require("path").join("./templets/"));
+    var allTamplates = fs.readdirSync(PATH.join("./templets/"));
     delete allTamplates[0];
     mainWind.webContents.send("allExistingTamplates", allTamplates);
     console.log(allTamplates);
+}
+
+// to check if someFileExistOrNot
+function checkIfFileExistCallback(filepath, callback) {
+    var isExist = fs.existsSync(filepath);
+    if (isExist) {
+        callback(true, filepath);
+    } else {
+        callback(false, filepath);
+    }
 }
 
 // auto updator function

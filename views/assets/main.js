@@ -9,18 +9,35 @@ var _IMAGE_TO_CORP = null;
 var _ALL_DATA_STORED = null;
 
 var electron = require("electron");
+var fs = require("fs");
+var path = require("path");
 
 // to show all saved Tamplates
 electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
     $.each(ars, (index, args) => {
-
-        args !== null ? args =  args.replace(".pdf.json" , "") : "";
-        var a = $(`<a class="item tempMenuItem" id="${args}.pdf.json">${args}</a>`) ;
+        args !== null ? args = args.replace(".pdf.json", "") : "";
+        var a = $(`<a class="item tempMenuItem" id="${args}.pdf.json">${args}</a>`);
         args !== null ? $(`#templatesContainer`).append(a) : "";
     });
+    /**
+     * in this button i have to get clicked button to get the same
+     * JSON file from
+     */
+    $(`.tempMenuItem`).click((event) => {
+        var fileName = $(event.target).attr("id");
+        var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
 
-    $(`.tempMenuItem`).click(()=> {
+        if (fileIsExist) {
+            var fileReaded = fs.readFileSync(path.join(__dirname, "/../", "templets", fileName));
+            try {
+                var parseJsonFile = JSON.parse(fileReaded);
+                _ALL_DATA_STORED = parseJsonFile.data;
+                imageEditorModalOptions.onApprove();
 
+            } catch (error) {
+                alert("could not parse file : " + fileName);
+            }
+        }
     })
 });
 
@@ -337,7 +354,8 @@ var imageEditorModalOptions = {
             cropImageFromCanvas(gettedContext, croppedCanvas);
 
             _ALL_DATA_STORED._UPLOADED_FILE = croppedCanvas.toDataURL();
-        }
+        };
+
         electron.ipcRenderer.send("chan", {
             selectedPageSize: _ALL_DATA_STORED.pageSizeDropdown,
             data: _ALL_DATA_STORED
