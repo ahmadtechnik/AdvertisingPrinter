@@ -10,6 +10,19 @@ var _ALL_DATA_STORED = null;
 
 var electron = require("electron");
 
+// to show all saved Tamplates
+electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
+    $.each(ars, (index, args) => {
+
+        args !== null ? args =  args.replace(".pdf.json" , "") : "";
+        var a = $(`<a class="item tempMenuItem" id="${args}.pdf.json">${args}</a>`) ;
+        args !== null ? $(`#templatesContainer`).append(a) : "";
+    });
+
+    $(`.tempMenuItem`).click(()=> {
+
+    })
+});
 
 $(document).ready(() => {
 
@@ -43,7 +56,11 @@ $(document).ready(() => {
     $(`input[type="text"]`).keydown(setInputFieldsLength)
     // init Checkbox fields
     $(".checkbox").checkbox();
+    // init sidbar menu
+    $(".sidebar").sidebar("toggle");
+
 });
+
 
 /**
  * "productTitleField"
@@ -270,7 +287,6 @@ $.each(colorsArray, (index, element) => {
     });
     div.remove();
 })
-
 
 function setInputFieldsLength(event) {
     var thisValue = $(this).val();

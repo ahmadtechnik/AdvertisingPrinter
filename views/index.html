@@ -30,117 +30,121 @@
 </head>
 
 <body>
-    <div class="ui vertically  grid">
-        <!--  -->
-        <div class="one column row">
-            <div class="column">
-                <div class="ui segment inverted ">
-                    <div class="ui header">Wilcomme to Advertising Printer Program.</div>
-                </div>
-            </div>
-        </div>
-        <!--  -->
-        <div class="one column row">
-            <div class="column">
-                <div class="ui form">
-                    <div class="three fields">
-                        <div class="field">
-                            <label for="">Product Title</label>
-                            <input type="text" name="" id="productTitleField">
-                            <span class="underInputFieldText">This Field accept only 15 Chars</span>
-                        </div>
-                        <div class="field">
-                            <label for="">Product New Price</label>
-                            <div class="ui right labeled input">
-                                <label for="amount" class="ui label">€</label>
-                                <input type="text" placeholder="New Price" id="productNewPriceField">
-                                <div class="ui basic label">.99</div>
-                            </div>
-                            <span class="underInputFieldText">This Field accept only 4 Chars</span>
-                        </div>
-                        <div class="field">
-                            <label for="">Product Old Price</label>
-                            <div class="ui right labeled input">
-                                <label for="amount" class="ui label">€</label>
-                                <input type="text" placeholder="Old Price" id="productOldPriceField">
-                                <div class="ui basic label">.99</div>
-                            </div>
-                            <span class="underInputFieldText">This Field accept only 4 Chars</span>
-                        </div>
-                    </div>
-                    <div class="two fields">
-                        <div class="field">
-                            <div class="ui checkbox">
-                                <input type="checkbox" name="addreflactionsToPrice" id="addToNewPrice">
-                                <label>Add .99 To New Price</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui checkbox">
-                                <input type="checkbox" name="addreflactionsToPrice" id="addToOldPrice">
-                                <label>Add .99 To Old Price</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="two fields">
-                        <div class="field">
-                            <label for="">Product manufacturer</label>
-                            <input type="text" id="productManufacturerField">
-                        </div>
-                        <div class="field">
-                            <label for="">Note</label>
-                            <input type="text" id="productNoteField">
-                        </div>
+    <div class="ui left vertical menu inverted sidebar" id="templatesContainer"></div>
+    <div class="pusher">
+        <div class="ui vertically grid">
+            <!--  -->
+            <div class="one column row">
+                <div class="column">
+                    <div class="ui segment inverted ">
+                        <div class="ui header">Wilcomme to Advertising Printer Program.</div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--  -->
-        <div class="one column row">
-            <div class="column" id="textEditorContainer">
-                <div style="padding: 20px;">
-                    <label for="editor">Product Description</label>
-                    <div id="editor"></div>
-                    <span class="underInputFieldText ">This Editor accept only 8 Lines</span>
-                </div>
-            </div>
-        </div>
-        <!--  -->
-        <div class="one column row stackable">
-            <div class="column">
-                <div class="ui form">
-                    <div class=" three equal fields">
-                        <div class="field">
-                            <select class="ui dropdown selection " id="pageBackgroundColorDropdown">
-                            </select>
-                        </div>
-                        <div class="field">
-                            <div class="ui fluid  selection dropdown" id="pageSizeDropdown">
-                                <input type="hidden">
-                                <div class="default text">Page Size</div>
-                                <i class="dropdown icon"></i>
+            <!--  -->
+            <div class="one column row">
+                <div class="column">
+                    <div class="ui form">
+                        <div class="three fields">
+                            <div class="field">
+                                <label for="">Product Title</label>
+                                <input type="text" name="" id="productTitleField">
+                                <span class="underInputFieldText">This Field accept only 15 Chars</span>
+                            </div>
+                            <div class="field">
+                                <label for="">Product New Price</label>
+                                <div class="ui right labeled input">
+                                    <label for="amount" class="ui label">€</label>
+                                    <input type="text" placeholder="New Price" id="productNewPriceField">
+                                    <div class="ui basic label">.99</div>
+                                </div>
+                                <span class="underInputFieldText">This Field accept only 4 Chars</span>
+                            </div>
+                            <div class="field">
+                                <label for="">Product Old Price</label>
+                                <div class="ui right labeled input">
+                                    <label for="amount" class="ui label">€</label>
+                                    <input type="text" placeholder="Old Price" id="productOldPriceField">
+                                    <div class="ui basic label">.99</div>
+                                </div>
+                                <span class="underInputFieldText">This Field accept only 4 Chars</span>
                             </div>
                         </div>
-                        <div class="field">
-                            <input type="file" style="display: none;" id="uploadedFileButton" accept="image/*" />
-                            <div class="ui button blue" id="uploadFileFakeButton">Upload PNG Image</div>
+                        <div class="two fields">
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" name="addreflactionsToPrice" id="addToNewPrice">
+                                    <label>Add .99 To New Price</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" name="addreflactionsToPrice" id="addToOldPrice">
+                                    <label>Add .99 To Old Price</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="two fields">
+                            <div class="field">
+                                <label for="">Product manufacturer</label>
+                                <input type="text" id="productManufacturerField">
+                            </div>
+                            <div class="field">
+                                <label for="">Note</label>
+                                <input type="text" id="productNoteField">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--  -->
+            <div class="one column row">
+                <div class="column" id="textEditorContainer">
+                    <div style="padding: 20px;">
+                        <label for="editor">Product Description</label>
+                        <div id="editor"></div>
+                        <span class="underInputFieldText ">This Editor accept only 8 Lines</span>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+            <div class="one column row stackable">
+                <div class="column">
+                    <div class="ui form">
+                        <div class=" three equal fields">
+                            <div class="field">
+                                <select class="ui dropdown selection " id="pageBackgroundColorDropdown">
+                                </select>
+                            </div>
+                            <div class="field">
+                                <div class="ui fluid  selection dropdown" id="pageSizeDropdown">
+                                    <input type="hidden">
+                                    <div class="default text">Page Size</div>
+                                    <i class="dropdown icon"></i>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <input type="file" style="display: none;" id="uploadedFileButton" accept="image/*" />
+                                <div class="ui button blue" id="uploadFileFakeButton">Upload PNG Image</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <div class="ui modal" id="imageEditor">
+            <div class="ui header">
+                Image Editor
+            </div>
+            <div class="scrolling content"></div>
+            <div class="actions">
+                <div class="ui button cancel red">Close</div>
+                <div class="ui button green ok">Finished</div>
+            </div>
+        </div>
+        <div class="ui button green enterDataFinished" id="printBtnAction">Print</div>
     </div>
-    <div class="ui modal" id="imageEditor">
-        <div class="ui header">
-            Image Editor
-        </div>
-        <div class="scrolling content"></div>
-        <div class="actions">
-            <div class="ui button cancel red">Close</div>
-            <div class="ui button green ok">Finished</div>
-        </div>
-    </div>
-    <div class="ui button green enterDataFinished" id="printBtnAction">Print</div>
 </body>
 <!-- import main script -->
 <script src="./assets/main.js"></script>

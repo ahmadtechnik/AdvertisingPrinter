@@ -11,12 +11,15 @@ const fs = require("fs");
 var HOME_DIR = require("os").homedir();
 
 var dirExist = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/");
-if(fs.existsSync(dirExist)){
+if (fs.existsSync(dirExist)) {
     console.log("FOLDER EXIST");
-}else{
+} else {
     var folderMeked = fs.mkdirSync(require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF"));
     console.log("FOLDER CREATED ....");
 }
+
+
+
 /*
 const request = require("request");
 const lastVLocal = require("./package.json").version;
@@ -34,8 +37,6 @@ request("https://ah-t.de/appsUpdates/appsMap.json", (error, response, body) => {
 let mainWind;
 
 app.on("ready", () => {
-
-
     mainWind = new BrowserWindow({
         width: 800,
         height: 600,
@@ -51,6 +52,11 @@ app.on("ready", () => {
     });
     mainWind.loadFile(__dirname + "/views/index.html");
 
+    mainWind.webContents.on("did-finish-load", () => {
+        emitAllTamplatesNames()
+    });
+
+    mainWind.setMenu(null);
 });
 var printWindow;
 ipcMain.on("chan", (event, args) => {
@@ -68,7 +74,7 @@ ipcMain.on("chan", (event, args) => {
         webPreferences: {
             nodeIntegration: true
         },
-        show: false
+        show: false,
     });
 
     printWindow.loadFile(__dirname + `/views/${selectedPageSize}.html`);
@@ -94,7 +100,7 @@ ipcMain.on("chan", (event, args) => {
             pageSize: selectedPageSize.toUpperCase()
         }, (error, data) => {
             if (!error) {
-                writeSyncFile(data, fileName);
+                writeSyncFile(data, fileName, args);
             } else {
                 dialog.showErrorBox("Error Print To PDF.", "ERROR : " + error);
             }
@@ -107,7 +113,8 @@ ipcMain.on("chan", (event, args) => {
     });
 });
 var counter = 1;
-function writeSyncFile(data, filename) {
+
+function writeSyncFile(data, filename, args) {
     var path = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/") + filename;
     var dirPath = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/");
     fs.writeFile(path, data, (err) => {
@@ -116,21 +123,42 @@ function writeSyncFile(data, filename) {
             dialog.showMessageBox(mainWind, {
                 title: "File Saved",
                 message: "Location : " + path,
-                detail : path
+                detail: path
             });
             require("openurl").open(`file://` + path);
             printWindow.close();
+            // write template file
+            createTemplate(args, require("path").join("./templets/") + filename + ".json");
         } else {
             var fileExist = fs.existsSync(dirPath + `GENERETEDNAME${counter}.pdf`);
             if (fileExist) {
                 console.log("File is exist");
                 counter++;
                 writeSyncFile(data, `GENERETEDNAME${counter}.pdf`);
+                // write template file
+                createTemplate(args, require("path").join("./templets/") + filename + ".json");
             } else {
                 console.log("File is not exist");
                 writeSyncFile(data, `GENERETEDNAME${counter}.pdf`);
+                // write template file
+                createTemplate(args, require("path").join("./templets/") + filename + ".json");
             }
         }
     });
 }
+
+/** funciton to create JSON template */
+function createTemplate(data, fileName) {
+    fs.writeFileSync(fileName, JSON.stringify(data), 'utf8');
+}
+
+/** to emit all tamplates Name to render */
+function emitAllTamplatesNames() {
+    // read all tamplates names 
+    var allTamplates = fs.readdirSync(require("path").join("./templets/"));
+    delete allTamplates[0];
+    mainWind.webContents.send("allExistingTamplates", allTamplates);
+    console.log(allTamplates);
+}
+
 // auto updator function
