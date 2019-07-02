@@ -1,7 +1,7 @@
 // init electron object
 var electron = require("electron");
 var _EDITOR = null;
-
+var checkBoxesData;
 
 electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     var productTitleField = arg.productTitleField;
@@ -14,6 +14,7 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     var pageBackgroundColorDropdown = arg.pageBackgroundColorDropdown;
     var _UPLOADED_FILE = arg._UPLOADED_FILE;
     var editor = arg.editor;
+    checkBoxesData = arg.checkBoxesData;
 
     var bodyObject = $(`#mainContainer`);
     var imageBackGrounde = $(`#imageBackgrounder`);
@@ -23,8 +24,8 @@ electron.ipcRenderer.on("dataToPrinta3", (event, arg) => {
     var productNoteFieldELEMENT = $(`<span class="productNoteField">${productNoteField}</span>`);
     var productOldPriceFieldELEMENT = productOldPriceField !== "" ?
         $(`<span class="productOldPriceField">${
-            euroFractionsFilter(productOldPriceField)}</span>`) : "";
-    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${euroFractionsFilter(productNewPriceField) }</span>`);
+            euroFractionsFilter(productOldPriceField , "productOldPriceField")}</span>`) : "";
+    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${euroFractionsFilter(productNewPriceField , "productNewPriceField") }</span>`);
     var productManufacturerFieldELEMENT = $(`<span class="productManufacturerField">${productManufacturerField}</span>`);
     var pageSizeDropdownELEMENT = $(`<span class="pageSizeDropdown">${pageSizeDropdown}</span>`);
     var pageBackgroundColorDropdownELEMENT = $(`<span class="pageBackgroundColorDropdown">${pageBackgroundColorDropdown}</span>`);
@@ -92,6 +93,8 @@ electron.ipcRenderer.on("dataToPrinta6", (event, arg) => {
     var _UPLOADED_FILE = arg._UPLOADED_FILE;
     var editor = arg.editor;
 
+    checkBoxesData = arg.checkBoxesData;
+
     var bodyObject = $(`#mainContainer`);
     var imageBackGrounde = $(`#imageBackgrounder`);
     var backfroundColored = $(`#backfroundColored`);
@@ -101,8 +104,8 @@ electron.ipcRenderer.on("dataToPrinta6", (event, arg) => {
     var productNoteFieldELEMENT = $(`<span class="productNoteField">${productNoteField}</span>`);
     var productOldPriceFieldELEMENT = productOldPriceField !== "" ?
         $(`<span class="productOldPriceField">${
-            euroFractionsFilter(productOldPriceField)}</span>`) : "";
-    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${euroFractionsFilter(productNewPriceField) }</span>`);
+            euroFractionsFilter(productOldPriceField,"productOldPriceField")}</span>`) : "";
+    var productNewPriceFieldELEMENT = $(`<span class="productNewPriceField">${euroFractionsFilter(productNewPriceField , "productNewPriceField") }</span>`);
     var productManufacturerFieldELEMENT = $(`<span class="productManufacturerField">${productManufacturerField}</span>`);
     var pageSizeDropdownELEMENT = $(`<span class="pageSizeDropdown">${pageSizeDropdown}</span>`);
     var pageBackgroundColorDropdownELEMENT = $(`<span class="pageBackgroundColorDropdown">${pageBackgroundColorDropdown}</span>`);
@@ -213,10 +216,20 @@ var _A3_PAGE_SIZES = {
     width: 4961
 };
 
-var euroFractionsFilter = (numener) => {
-    if (numener.substr(numener.length - 1) === "9") {
-        return numener + ".99<sup>€</sup>";
-    } else {
-        return numener + "<sup>€</sup>";
+var euroFractionsFilter = (numener, fieldName) => {
+    switch (fieldName) {
+        case "productOldPriceField":
+            if (numener.substr(numener.length - 1) === "9" || checkBoxesData.addToOldPrice) {
+                return numener + ".99<sup>€</sup>";
+            } else {
+                return numener + "<sup>€</sup>";
+            }
+            break;
+        case "productNewPriceField":
+            if (numener.substr(numener.length - 1) === "9" || checkBoxesData.addToNewPrice) {
+                return numener + ".99<sup>€</sup>";
+            } else {
+                return numener + "<sup>€</sup>";
+            }
     }
 }

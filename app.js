@@ -10,9 +10,23 @@ const {
 const fs = require("fs");
 var HOME_DIR = require("os").homedir();
 
+var dirExist = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/");
+if(fs.existsSync(dirExist)){
+    console.log("FOLDER EXIST");
+}else{
+    var folderMeked = fs.mkdirSync(require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF"));
+    console.log("FOLDER CREATED ....");
+}
+/*
+const request = require("request");
+const lastVLocal = require("./package.json").version;
+const appName = require("./package.json").appName;
+request("https://ah-t.de/appsUpdates/appsMap.json", (error, response, body) => {
+    if (!error && response.statusCode === 200) {
 
-
-
+    }
+});
+*/
 
 /**
  * get app ready
@@ -20,7 +34,7 @@ var HOME_DIR = require("os").homedir();
 let mainWind;
 
 app.on("ready", () => {
- 
+
 
     mainWind = new BrowserWindow({
         width: 800,
@@ -80,30 +94,43 @@ ipcMain.on("chan", (event, args) => {
             pageSize: selectedPageSize.toUpperCase()
         }, (error, data) => {
             if (!error) {
-                var path = require("path").join(HOME_DIR + "/Desktop/") + fileName;
-                fs.writeFile(path, data, (err) => {
-                    if (!err) {
-                        printWindow.webContents.send("savedFilePath", path);
-                        dialog.showMessageBox({
-                            title: "File Saved",
-                            message: "Location : " + path
-                        });
-                        require("openurl").open(`file://` + path);
-                        printWindow.close();
-                    } else {
-                        dialog.showErrorBox("Error Saving File.", "ERROR : " + err + "\n Please notes that, maybe the old file still opened");
-                        printWindow.close();
-                    }
-                });
+                writeSyncFile(data, fileName);
             } else {
                 dialog.showErrorBox("Error Print To PDF.", "ERROR : " + error);
             }
         });
     });
-
     /** to clear RAM after window closed */
     printWindow.on("closed", () => {
         printWindow = null;
         console.log("closed")
-    })
-})
+    });
+});
+var counter = 1;
+function writeSyncFile(data, filename) {
+    var path = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/") + filename;
+    var dirPath = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/");
+    fs.writeFile(path, data, (err) => {
+        if (!err) {
+            printWindow.webContents.send("savedFilePath", path);
+            dialog.showMessageBox(mainWind, {
+                title: "File Saved",
+                message: "Location : " + path,
+                detail : path
+            });
+            require("openurl").open(`file://` + path);
+            printWindow.close();
+        } else {
+            var fileExist = fs.existsSync(dirPath + `GENERETEDNAME${counter}.pdf`);
+            if (fileExist) {
+                console.log("File is exist");
+                counter++;
+                writeSyncFile(data, `GENERETEDNAME${counter}.pdf`);
+            } else {
+                console.log("File is not exist");
+                writeSyncFile(data, `GENERETEDNAME${counter}.pdf`);
+            }
+        }
+    });
+}
+// auto updator function

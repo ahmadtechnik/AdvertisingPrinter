@@ -41,6 +41,8 @@ $(document).ready(() => {
     $(`#uploadedFileButton`).change(onUploadBtnChnge);
     // to lock any input filed
     $(`input[type="text"]`).keydown(setInputFieldsLength)
+    // init Checkbox fields
+    $(".checkbox").checkbox();
 });
 
 /**
@@ -56,6 +58,12 @@ $(document).ready(() => {
  * "uploadFileFakeButton"
  */
 var onPrintBtnAction = (event) => {
+
+    var checkBoxesData = {};
+    $.each($("[name='addreflactionsToPrice']"), (index, value) => {
+        checkBoxesData[$(value).attr("id")] = $(value).is(":checked");
+    });
+
     var productTitleField = $(`#productTitleField`) //
     var productNewPriceField = $(`#productNewPriceField`); //
     var productOldPriceField = $(`#productOldPriceField`);
@@ -89,6 +97,7 @@ var onPrintBtnAction = (event) => {
                                 productNoteField: productNoteField.val(),
                                 editor: editor,
                                 pageSizeDropdown: pageSizeDropdown,
+                                checkBoxesData: checkBoxesData
                             }
 
                             var img = new Image();
@@ -295,6 +304,7 @@ function setInputFieldsLength(event) {
  * define image editor modal options
  */
 var imageEditorModalOptions = {
+    closable: false,
     onHide: () => {
 
     },
@@ -338,7 +348,6 @@ var imageEditorModalOptions = {
             return obj;
         }
     },
-
     onVisible: () => {
         var AspectTatio = 2 / 3;
         if (_ALL_DATA_STORED.pageSizeDropdown === "a6") {
@@ -346,8 +355,10 @@ var imageEditorModalOptions = {
         }
         _IMAGE_EDITOR_ = new Cropper(_IMAGE_TO_CORP, {
             viewMode: 2,
+            autoCropArea: 1
         });
-        _IMAGE_EDITOR_.setAspectRatio(AspectTatio)
+        _IMAGE_EDITOR_.setAspectRatio(AspectTatio);
+
     }
 }
 /** extentions */
