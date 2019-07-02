@@ -16,8 +16,18 @@ var path = require("path");
 electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
     $.each(ars, (index, args) => {
         args !== null ? args = args.replace(".pdf.json", "") : "";
-        var a = $(`<a class="item tempMenuItem" id="${args}.pdf.json">${args}</a>`);
-        args !== null ? $(`#templatesContainer`).append(a) : "";
+        if (args !== null) {
+            var fileName = `${args}.pdf.json`
+            var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
+            var fileReaded = fs.readFileSync(path.join(__dirname, "/../", "templets", fileName));
+            var background = JSON.parse(fileReaded).data.pageBackgroundColorDropdown;
+            var pageSize = args !== null ? args.split("#")[1] : "";
+            var a = $(`<a class="item tempMenuItem" id="${args}.pdf.json">${args}-${pageSize.toUpperCase()} </a>`);
+            a.css({
+                background : background
+            })
+            args !== null ? $(`#templatesContainer`).append(a) : "";
+        }
     });
     /**
      * in this button i have to get clicked button to get the same
@@ -39,6 +49,7 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
             }
         }
     })
+
 });
 
 $(document).ready(() => {

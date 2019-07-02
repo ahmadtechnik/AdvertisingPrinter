@@ -144,38 +144,35 @@ function writeSyncFile(data, filename, args) {
             fs.writeFile(path, data, (err) => {
                 if (!err) {
                     printWindow.webContents.send("savedFilePath", path);
-                    dialog.showMessageBox(mainWind, {
-                        title: "File Saved",
-                        message: "Location : " + path,
-                        detail: path
-                    });
-
-                    require("openurl").open(`file://` + path);
-                    printWindow.close();
                     // write template file
                     createTemplate(args, PATH.join(__dirname + "/templets/") + filename + ".json");
-
+                    dialog.showMessageBox(mainWind, {
+                        title: "DONE!!!",
+                        message: "This file was succesfully created..",
+                        detail: "File Location : " + path,
+                        buttons: [
+                            "Ok", "Open Old file to me."
+                        ]
+                    }, (response) => {
+                        switch (response) {
+                            case 1:
+                                require("openurl").open(`file://` + path);
+                                break;
+                        }
+                    });
+                    printWindow.close();
                 } else {
                     var newName = filename.replace(/[|&;$%@"<>()+/,]/g, "-");
                     /** if the same file was not exist or opened */
                     writeSyncFile(data, newName, args);
                     // write template file
                     createTemplate(args, PATH.join(__dirname + "/templets/", newName + ".json"));
-                    // 
-                    console.log("FILE PATH : ", newName);
-                    counter++;
-                    console.log(counter);
-                    /*
-                          dialog.showErrorBox("ERROR AFTER 2 TRIES.",
-                              "This program could not write the file because of one of those issue: (1 - some file with same name is oppend. )");
-                      */
 
+                    counter++;
                 }
             });
         }
     });
-
-
 }
 
 /** funciton to create JSON template */
@@ -198,7 +195,6 @@ function emitAllTamplatesNames() {
     var allTamplates = fs.readdirSync(PATH.join("./templets/"));
     delete allTamplates[0];
     mainWind.webContents.send("allExistingTamplates", allTamplates);
-    console.log(allTamplates);
 }
 
 // to check if someFileExistOrNot
