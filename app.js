@@ -117,6 +117,7 @@ var counter = 1;
 function writeSyncFile(data, filename, args) {
     var path = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/") + filename;
     var dirPath = require("path").join(HOME_DIR + "/Desktop/AdvertisingPDF/");
+
     fs.writeFile(path, data, (err) => {
         if (!err) {
             printWindow.webContents.send("savedFilePath", path);
@@ -130,26 +131,37 @@ function writeSyncFile(data, filename, args) {
             // write template file
             createTemplate(args, require("path").join("./templets/") + filename + ".json");
         } else {
-            var fileExist = fs.existsSync(dirPath + `GENERETEDNAME${counter}.pdf`);
+            var newName = filename.replace(/[|&;$%@"<>()+/,]/g, "-");
+            var fileExist = fs.existsSync(require("path").join(dirPath, newName));
+
             if (fileExist) {
-                console.log("File is exist");
-                counter++;
-                writeSyncFile(data, `GENERETEDNAME${counter}.pdf`);
-                // write template file
-                createTemplate(args, require("path").join("./templets/") + filename + ".json");
-            } else {
-                console.log("File is not exist");
-                writeSyncFile(data, `GENERETEDNAME${counter}.pdf`);
-                // write template file
-                createTemplate(args, require("path").join("./templets/") + filename + ".json");
+                /*
+                dialog.showMessageBox(mainWind, {
+                    title: "THIS FILE EXIST",
+                    message: "This file is alredy exist.",
+                    detail: path
+                });
+                */
             }
+
+            writeSyncFile(data, newName, args);
+            // write template file
+            createTemplate(args, require("path").join("./templets/", newName + ".json"));
         }
     });
 }
 
 /** funciton to create JSON template */
 function createTemplate(data, fileName) {
-    fs.writeFileSync(fileName, JSON.stringify(data), 'utf8');
+    var fileExist = fs.existsSync(fileName);
+
+    fs.writeFile(fileName, JSON.stringify(data), 'utf8', (err) => {
+        if (!err) {
+
+        } else {
+            console.log(err);
+        }
+    });
 }
 
 /** to emit all tamplates Name to render */
