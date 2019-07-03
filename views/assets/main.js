@@ -19,6 +19,7 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
         if (args !== null) {
             var fileName = `${args}.pdf.json`
             var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
+            console.log(path.join(__dirname, "/../", "templets", fileName))
             var fileReaded = fs.readFileSync(path.join(__dirname, "/../", "templets", fileName));
             var background = JSON.parse(fileReaded).data.pageBackgroundColorDropdown;
             var pageSize = args !== null ? args.split("#")[1] : "";

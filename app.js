@@ -137,6 +137,7 @@ function writeSyncFile(data, filename, args) {
                         require("openurl").open(`file://` + path);
                         break;
                 }
+                printWindow.close();
             });
         }
         // in this case it should write the file again
@@ -167,12 +168,12 @@ function writeSyncFile(data, filename, args) {
                     writeSyncFile(data, newName, args);
                     // write template file
                     createTemplate(args, PATH.join(__dirname + "/templets/", newName + ".json"));
-
                     counter++;
                 }
             });
         }
     });
+    
 }
 
 /** funciton to create JSON template */
@@ -192,7 +193,7 @@ function createTemplate(data, fileName) {
 /** to emit all tamplates Name to render */
 function emitAllTamplatesNames() {
     // read all tamplates names 
-    var allTamplates = fs.readdirSync(PATH.join("./templets/"));
+    var allTamplates = fs.readdirSync(PATH.join(__dirname, "./templets/"));
     delete allTamplates[0];
     mainWind.webContents.send("allExistingTamplates", allTamplates);
 }
