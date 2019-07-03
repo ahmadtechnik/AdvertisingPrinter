@@ -160,8 +160,8 @@ function writeSyncFile(data, filename, args) {
                                 require("openurl").open(`file://` + path);
                                 break;
                         }
+                        printWindow.close();
                     });
-                    printWindow.close();
                 } else {
                     var newName = filename.replace(/[|&;$%@"<>()+/,]/g, "-");
                     /** if the same file was not exist or opened */
