@@ -17,6 +17,7 @@ var HOME_DIR = require("os").homedir();
 
 // to show all saved Tamplates
 electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
+    console.log(ars)
     $(`.tempMenuItem`).remove();
     $.each(ars, (index, args) => {
         args !== null ? args = args.replace(".pdf.json", "") : "";
@@ -24,7 +25,7 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
             var fileName = `${args}.pdf.json`
             var filePathWithoutJSONExtention = path.join(HOME_DIR, "/Desktop/AdvertisingPDF/", fileName.split(".json")[0]);
             var pdfFileExist = fs.existsSync(filePathWithoutJSONExtention);
-
+            console.log(filePathWithoutJSONExtention , pdfFileExist)
             var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
             if (fileIsExist && pdfFileExist) {
                 try {
@@ -52,6 +53,7 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
         var fileName = $(event.target).attr("id");
         var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
         var filePathWithoutJSONExtention = path.join(HOME_DIR, "/Desktop/AdvertisingPDF/", fileName.split(".json")[0]);
+        
         var pdfFileExist = fs.existsSync(filePathWithoutJSONExtention);
         event.ctrlKey === true ? removeFileFromStorage() : openFile();
 
