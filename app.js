@@ -9,7 +9,7 @@ const {
 } = require("electron");
 const fs = require("fs");
 var HOME_DIR = require("os").homedir();
-var PATH = require("path")
+var PATH = require("path");
 
 var dirExist = PATH.join(HOME_DIR + "/Desktop/AdvertisingPDF/");
 if (fs.existsSync(dirExist)) {
@@ -54,7 +54,7 @@ app.on("ready", () => {
     mainWind.loadFile(__dirname + "/views/index.html");
 
     mainWind.webContents.on("did-finish-load", () => {
-        emitAllTamplatesNames()
+        
     });
 
     //mainWind.setMenu(null);
@@ -114,6 +114,11 @@ ipcMain.on("chan", (event, args) => {
     });
 });
 
+ipcMain.on("showSidbarMenu" , () => {
+    console.log("on showSidbarMenu")
+    emitAllTamplatesNames();
+})
+
 var counter = 1;
 
 function writeSyncFile(data, filename, args) {
@@ -124,6 +129,16 @@ function writeSyncFile(data, filename, args) {
         // in this case the file is exist
         // and it should not be writted again
         if (fileExist) {
+            var selectedBackgroundColor = args.data.pageBackgroundColorDropdown;
+            var newFileName = counter + "_" + filename;
+            /** 
+             * in case the file was exist 
+             * it should to be written again with 
+             * other name
+             */
+
+            writeSyncFile(data, newFileName, args);
+            /*
             dialog.showMessageBox(mainWind, {
                 title: "THIS FILE EXIST",
                 message: "Please change file name or you can also change {Product Title} to change the name automatically",
@@ -138,6 +153,8 @@ function writeSyncFile(data, filename, args) {
                         break;
                 }
             });
+*/
+            counter++;
         }
         // in this case it should write the file again
         else {
@@ -151,7 +168,7 @@ function writeSyncFile(data, filename, args) {
                         message: "This file was succesfully created..",
                         detail: "File Location : " + path,
                         buttons: [
-                            "Ok", "Open Old file to me."
+                            "Ok", "Open Saved File."
                         ]
                     }, (response) => {
                         switch (response) {
@@ -160,6 +177,7 @@ function writeSyncFile(data, filename, args) {
                                 break;
                         }
                     });
+                    
                     printWindow.close();
                 } else {
                     var newName = filename.replace(/[|&;$%@"<>()+/,]/g, "-");

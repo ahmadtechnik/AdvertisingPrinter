@@ -11,3 +11,7 @@
     color: gray;
     font-size: 12px;
 }
+.showtampletesBtn{
+    position: relative;
+    float: right;
+}

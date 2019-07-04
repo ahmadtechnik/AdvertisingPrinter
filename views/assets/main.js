@@ -11,22 +11,37 @@ var _ALL_DATA_STORED = null;
 var electron = require("electron");
 var fs = require("fs");
 var path = require("path");
+var HOME_DIR = require("os").homedir();
+
+
 
 // to show all saved Tamplates
 electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
+    $(`.tempMenuItem`).remove();
     $.each(ars, (index, args) => {
         args !== null ? args = args.replace(".pdf.json", "") : "";
         if (args !== null) {
             var fileName = `${args}.pdf.json`
+            var filePathWithoutJSONExtention = path.join(HOME_DIR, "/Desktop/AdvertisingPDF/", fileName.split(".json")[0]);
+            var pdfFileExist = fs.existsSync(filePathWithoutJSONExtention);
+
             var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
-            var fileReaded = fs.readFileSync(path.join(__dirname, "/../", "templets", fileName));
-            var background = JSON.parse(fileReaded).data.pageBackgroundColorDropdown;
-            var pageSize = args !== null ? args.split("#")[1] : "";
-            var a = $(`<a class="item tempMenuItem" id="${args}.pdf.json">${args}-${pageSize.toUpperCase()} </a>`);
-            a.css({
-                background : background
-            })
-            args !== null ? $(`#templatesContainer`).append(a) : "";
+            if (fileIsExist && pdfFileExist) {
+                try {
+                    var fileReaded = fs.readFileSync(path.join(__dirname, "/../", "templets", fileName), "utf8");
+                    var background = JSON.parse(fileReaded).data.pageBackgroundColorDropdown;
+                    var pageSize = args !== null ? args.split("#")[1] : "";
+                    var a = $(`<a class="item tempMenuItem" id="${args}.pdf.json">${args}-${pageSize.toUpperCase()}</a>`);
+                    // var removeBtnIcon = $(`<div class="ui button icon black inverted><i class="trash alternate outline icon"></i></div>"`);
+                    a.css({
+                        background: background
+                    })
+                    $(`#templatesContainer`).append(a);
+
+                } catch (error) {
+                    console.log(error)
+                }
+            }
         }
     });
     /**
@@ -36,24 +51,50 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
     $(`.tempMenuItem`).click((event) => {
         var fileName = $(event.target).attr("id");
         var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
+        var filePathWithoutJSONExtention = path.join(HOME_DIR, "/Desktop/AdvertisingPDF/", fileName.split(".json")[0]);
+        var pdfFileExist = fs.existsSync(filePathWithoutJSONExtention);
+        event.ctrlKey === true ? removeFileFromStorage() : openFile();
 
-        if (fileIsExist) {
-            var fileReaded = fs.readFileSync(path.join(__dirname, "/../", "templets", fileName));
-            try {
-                var parseJsonFile = JSON.parse(fileReaded);
-                _ALL_DATA_STORED = parseJsonFile.data;
-                imageEditorModalOptions.onApprove();
+        function openFile() {
+            if (fileIsExist) {
+                try {
+                    /** check if the pdf file exist before write it again */
 
-            } catch (error) {
-                alert("could not parse file : " + fileName);
+                    if (pdfFileExist) {
+                        require("openurl").open(`file://` + filePathWithoutJSONExtention);
+                    } else {
+                        alert(`THIS FILE ${filePathWithoutJSONExtention} REMOVED FROM DESKTOP DIRECTORY`);
+                        /*
+                        var parseJsonFile = JSON.parse(fileReaded);
+                        _ALL_DATA_STORED = parseJsonFile.data;
+                        imageEditorModalOptions.onApprove();
+                        */
+                    }
+                } catch (error) {
+                    alert("could not parse file : " + fileName);
+                }
             }
         }
-    })
 
+        function removeFileFromStorage() {
+            if (pdfFileExist && fileIsExist) {
+                fs.unlinkSync(path.join(__dirname, "/../", "templets", fileName));
+                fs.unlinkSync(filePathWithoutJSONExtention);
+                $(`#showtampletesBtn`).click();
+            }
+        };
+    });
+    $(`.tempMenuItem`).hover((event) => {
+        $(event.target).attr("old", $(event.target).text());
+        event.ctrlKey ? $(event.target).text("REMOVE.") : "";
+    }, (event) => {
+        var oldText = $(event.target).text();
+        event.ctrlKey ? $(event.target).text($(event.target).attr("old")) : $(event.target).text($(event.target).attr("old"));
+    })
 });
 
-$(document).ready(() => {
 
+$(document).ready(() => {
     _EDITOR = new Quill('#editor', options);
     _EDITOR.on('text-change', function (delta, oldDelta, source) {
         if (_EDITOR.getLines().length >= 8) {
@@ -85,8 +126,16 @@ $(document).ready(() => {
     // init Checkbox fields
     $(".checkbox").checkbox();
     // init sidbar menu
-    $(".sidebar").sidebar("toggle");
 
+    // set showtampletesBtn action
+    $(`#showtampletesBtn`).click(() => {
+        electron.ipcRenderer.send("showSidbarMenu");
+        $(".sidebar").sidebar('setting', 'transition', 'scale down').sidebar("toggle");
+    });
+
+    $(document).keydown((event) => {
+        event.ctrlKey ? "" : ""
+    });
 });
 
 
