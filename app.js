@@ -5,7 +5,8 @@ const {
     ipcMain,
     dialog,
     Menu,
-    MenuItem
+    MenuItem,
+    globalShortcut
 } = require("electron");
 const fs = require("fs");
 var HOME_DIR = require("os").homedir();

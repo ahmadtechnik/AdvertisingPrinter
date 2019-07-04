@@ -86,9 +86,8 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
     });
     $(`.tempMenuItem`).hover((event) => {
         $(event.target).attr("old", $(event.target).text());
-        event.ctrlKey ? $(event.target).text("REMOVE.") : "";
+        event.ctrlKey ? $(event.target).text("REMOVE.") : $(event.target).text($(event.target).attr("old"));
     }, (event) => {
-        var oldText = $(event.target).text();
         event.ctrlKey ? $(event.target).text($(event.target).attr("old")) : $(event.target).text($(event.target).attr("old"));
     })
 });
@@ -134,7 +133,9 @@ $(document).ready(() => {
     });
 
     $(document).keydown((event) => {
-        event.ctrlKey ? "" : ""
+        if(event.keyCode === 122) {
+            return false;
+        }
     });
 });
 
