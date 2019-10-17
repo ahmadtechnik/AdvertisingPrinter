@@ -38,7 +38,7 @@
                 <div class="column">
                     <div class="ui segment inverted ">
                         <div class="ui header">Wilcomme to Advertising Printer Program.</div>
-                        <div class="ui button orange small showtampletesBtn" id="showtampletesBtn" >Show Templates</div>
+                        <div class="ui button orange small showtampletesBtn" id="showtampletesBtn">Show Templates</div>
                     </div>
                 </div>
             </div>
@@ -98,6 +98,8 @@
                     </div>
                 </div>
             </div>
+
+
             <!--  -->
             <div class="one column row">
                 <div class="column" id="textEditorContainer">
@@ -144,7 +146,37 @@
                 <div class="ui button green ok">Finished</div>
             </div>
         </div>
-        <div class="ui button green enterDataFinished" id="printBtnAction">Print</div>
+
+        <!--  -->
+        <div class="ui icon message orange" >
+            <i class="inbox icon"></i>
+            <div class="content" >
+                <div class="header">
+                    Old Tempates
+                </div>
+                <p>Under this Message you ganna to find all old tamblet </p>
+            </div>
+            <div class="ui button green enterDataFinished" id="printBtnAction">Print</div>
+        </div>
+
+        <!-- TABLE OF SAVED TEMPLATE -->
+        <div class="ui container">
+            <table class="ui celled table compact" id="histryTable">
+                <thead>
+                    <tr>
+                        <th>P-Title</th>
+                        <th>P-O-Price</th>
+                        <th>P-N-Price</th>
+                        <th>P-manufacturer</th>
+                        <th>P-Note</th>
+                        <th>P-Description</th>
+                    </tr>
+                </thead>
+                <tbody id="histryTableBody">
+
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 <!-- import main script -->

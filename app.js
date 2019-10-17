@@ -114,14 +114,32 @@ ipcMain.on("chan", (event, args) => {
         console.log("closed")
     });
 });
-
+/** */
 ipcMain.on("showSidbarMenu", () => {
-    console.log("on showSidbarMenu")
     emitAllTamplatesNames();
 })
+/** send to rander all avalible data as object */
+ipcMain.on("showMeAllAvilibleTamplates", (event, arg) => {
+    // read all tamplates names 
+    var allTamplates = fs.readdirSync(PATH.join(__dirname, "/templets/"));
+    var objectToPass = {};
+    /**each files names object */
+    allTamplates.forEach((v, i) => {
+        if (v !== ".keep") {
+            /** parse json file after read it by read file */
+            var fileContent = JSON.parse(fs.readFileSync(PATH.join(__dirname, "/templets/" + v)));
+            if (fileContent["data"]["_UPLOADED_FILE"]) {
+                delete fileContent["data"]["_UPLOADED_FILE"];
+            }
+            objectToPass[v] = fileContent;
+        }
+    });
+    event.returnValue = objectToPass;
 
+})
+/** */
 var counter = 1;
-
+/** */
 function writeSyncFile(data, filename, args) {
     var path = PATH.join(HOME_DIR + "/Desktop/AdvertisingPDF/") + filename;
     var dirPath = PATH.join(HOME_DIR + "/Desktop/AdvertisingPDF/");
@@ -198,7 +216,6 @@ function writeSyncFile(data, filename, args) {
 function createTemplate(data, fileName) {
     console.log(fileName);
     var fileExist = fs.existsSync(fileName);
-
     fs.writeFile(fileName, JSON.stringify(data), 'utf8', (err) => {
         if (!err) {
 

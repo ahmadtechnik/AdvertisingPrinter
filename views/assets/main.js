@@ -17,7 +17,6 @@ var HOME_DIR = require("os").homedir();
 
 // to show all saved Tamplates
 electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
-    console.log(ars)
     $(`.tempMenuItem`).remove();
     $.each(ars, (index, args) => {
         args !== null ? args = args.replace(".pdf.json", "") : "";
@@ -25,7 +24,7 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
             var fileName = `${args}.pdf.json`
             var filePathWithoutJSONExtention = path.join(HOME_DIR, "/Desktop/AdvertisingPDF/", fileName.split(".json")[0]);
             var pdfFileExist = fs.existsSync(filePathWithoutJSONExtention);
-            console.log(filePathWithoutJSONExtention , pdfFileExist)
+            console.log(filePathWithoutJSONExtention, pdfFileExist)
             var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
             if (fileIsExist && pdfFileExist) {
                 try {
@@ -53,7 +52,7 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
         var fileName = $(event.target).attr("id");
         var fileIsExist = fs.existsSync(path.join(__dirname, "/../", "templets", fileName));
         var filePathWithoutJSONExtention = path.join(HOME_DIR, "/Desktop/AdvertisingPDF/", fileName.split(".json")[0]);
-        
+
         var pdfFileExist = fs.existsSync(filePathWithoutJSONExtention);
         event.ctrlKey === true ? removeFileFromStorage() : openFile();
 
@@ -86,6 +85,7 @@ electron.ipcRenderer.on("allExistingTamplates", (event, ars) => {
             }
         };
     });
+
     $(`.tempMenuItem`).hover((event) => {
         $(event.target).attr("old", $(event.target).text());
         event.ctrlKey ? $(event.target).text("REMOVE.") : $(event.target).text($(event.target).attr("old"));
@@ -133,12 +133,14 @@ $(document).ready(() => {
         electron.ipcRenderer.send("showSidbarMenu");
         $(".sidebar").sidebar('setting', 'transition', 'scale down').sidebar("toggle");
     });
-
+    /** to detect if the user pressed any kay to remove data from sidebar  */
     $(document).keydown((event) => {
-        if(event.keyCode === 122) {
+        if (event.keyCode === 122) {
             return false;
         }
     });
+    /** to show user all aviliable templates in table */
+    getAllAvilibleTamplates();
 });
 
 
@@ -211,8 +213,6 @@ var onPrintBtnAction = (event) => {
 
 
                             $(`#imageEditor`).modal(imageEditorModalOptions).modal("show");
-
-
                         });
 
 
@@ -417,6 +417,8 @@ var imageEditorModalOptions = {
             cropImageFromCanvas(gettedContext, croppedCanvas);
 
             _ALL_DATA_STORED._UPLOADED_FILE = croppedCanvas.toDataURL();
+
+            
         };
 
         electron.ipcRenderer.send("chan", {
@@ -455,7 +457,6 @@ var imageEditorModalOptions = {
             autoCropArea: 1
         });
         _IMAGE_EDITOR_.setAspectRatio(AspectTatio);
-
     }
 }
 /** extentions */
@@ -511,4 +512,31 @@ function cropImageFromCanvas(ctx, canvas) {
     canvas.height = h;
     ctx.putImageData(cut, 0, 0);
 
+};
+
+/** request to get all avilable data stored in static files JSON */
+var getAllAvilibleTamplates = () => {
+    var geted = electron.ipcRenderer.sendSync("showMeAllAvilibleTamplates");
+    console.log(geted);
+    $.each(geted, (i, v) => {
+        var dat = v.data;
+        var editorValue = dat.editor;
+        var productNewPriceFieldValue = dat.productNewPriceField;
+        var productTitleFieldValue = dat.productTitleField;
+        var productOldPriceFieldValue = dat.productOldPriceField;
+        var productNoteFieldValue = dat.productNoteField;
+        var productManufacturerFieldValue = dat.productManufacturerField;
+        $(`#histryTableBody`).append(
+            $(`<tr></tr>`).html([
+                `<td>${productTitleFieldValue}</td>`,
+                `<td>${productOldPriceFieldValue}</td>`,
+                `<td>${productNewPriceFieldValue}</td>`,
+                `<td>${productManufacturerFieldValue}</td>`,
+                `<td>${productNoteFieldValue}</td>`,
+                `<td><div style='height:100px; overflow: auto;'>${editorValue}</div></td>`,
+            ])
+        );
+        // clear the object after finishing it
+        delete geted[i]
+    });
 }

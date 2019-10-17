@@ -1,7 +1,7 @@
 {
   "name": "advertisingprinter",
   "version": "1.0.0",
-  "appName"  :"AdvertisingPrinter",
+  "appName": "AdvertisingPrinter",
   "description": "",
   "main": "app.js",
   "scripts": {

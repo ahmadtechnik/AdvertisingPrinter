@@ -3,9 +3,9 @@
 }
 
 .enterDataFinished{
-    position: fixed;
-    right: 10px;
-    bottom: 10px;
+float: right;
+margin-right: 25px; 
+margin-bottom: 25px;;
 }
 .underInputFieldText{
     color: gray;

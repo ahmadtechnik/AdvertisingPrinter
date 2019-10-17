@@ -63,3 +63,10 @@ typings/
 # .jpg and images
 *.jpg
 *.png
+*.pdf
+
+# ignore store the templates 
+templets/
+
+# ignore executable script
+*.bat
