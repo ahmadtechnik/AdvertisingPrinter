@@ -24,7 +24,7 @@
   "homepage": "https://github.com/ahmadkoudier/AdvertisingPrinter#readme",
   "dependencies": {
     "electron": "^5.0.5",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "openurl": "^1.1.1",
     "request": "^2.88.0"
   },
