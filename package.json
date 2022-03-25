@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/ahmadkoudier/AdvertisingPrinter#readme",
   "dependencies": {
-    "electron": "^5.0.5",
+    "electron": "^13.6.6",
     "jquery": "^3.4.1",
     "openurl": "^1.1.1",
     "request": "^2.88.0"
